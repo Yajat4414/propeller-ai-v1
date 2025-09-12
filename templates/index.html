@@ -1,0 +1,1227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Propeller AI - Advanced Chatbot</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .dark-mode {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+        }
+        
+        .chat-animation {
+            animation: slideUp 0.5s ease-out;
+        }
+        
+        @keyframes slideUp {
+            from {
+                transform: translateY(20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+        
+        .typing-indicator {
+            animation: pulse 1.5s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        .message-bubble {
+            animation: bubbleIn 0.4s ease-out;
+        }
+        
+        @keyframes bubbleIn {
+            from {
+                transform: scale(0.8);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+        
+        .sidebar-enter {
+            animation: slideInLeft 0.3s ease-out;
+        }
+        
+        @keyframes slideInLeft {
+            from { transform: translateX(-100%); }
+            to { transform: translateX(0); }
+        }
+        
+        .loading-dots {
+            animation: loadingDots 1.4s infinite ease-in-out;
+        }
+        
+        .loading-dots:nth-child(1) { animation-delay: -0.32s; }
+        .loading-dots:nth-child(2) { animation-delay: -0.16s; }
+        
+        @keyframes loadingDots {
+            0%, 80%, 100% {
+                transform: scale(0);
+            }
+            40% {
+                transform: scale(1);
+            }
+        }
+        
+        .scroll-smooth {
+            scroll-behavior: smooth;
+        }
+        
+        .resizable-textarea {
+            resize: none;
+            overflow: hidden;
+        }
+        
+        .glass-effect {
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .dark .glass-effect {
+            background: rgba(0, 0, 0, 0.2);
+        }
+    </style>
+</head>
+<body class="gradient-bg min-h-screen transition-all duration-500" id="mainBody">
+    <!-- Theme Toggle -->
+    <button id="themeToggle" class="fixed top-4 right-4 z-50 p-3 bg-white/20 backdrop-blur-sm rounded-full hover:bg-white/30 transition-all duration-300">
+        <i class="fas fa-moon text-white text-lg" id="themeIcon"></i>
+    </button>
+
+    <!-- Sidebar Toggle -->
+    <div id="sidebarToggle" class="fixed top-6 left-6 z-50 cursor-pointer group hidden">
+        <div class="flex flex-col space-y-1 p-3 bg-blue-500 rounded-lg hover:bg-blue-600 transition-all duration-300 shadow-lg">
+            <div class="w-6 h-0.5 bg-white rounded-full transition-all duration-300"></div>
+            <div class="w-6 h-0.5 bg-white rounded-full transition-all duration-300"></div>
+            <div class="w-6 h-0.5 bg-white rounded-full transition-all duration-300"></div>
+        </div>
+    </div>
+
+    <!-- Sidebar -->
+    <div id="sidebar" class="fixed left-0 top-0 h-full w-80 bg-gray-800 shadow-2xl transform -translate-x-full transition-transform duration-300 z-40 sidebar-enter">
+        <div class="p-6 bg-gray-800 h-full overflow-y-auto">
+            <!-- Header -->
+            <div class="flex items-center justify-between mb-8 border-b-2 border-purple-500 pb-4">
+                <h4 class="text-white text-2xl font-bold tracking-wide">Propeller AI</h4>
+                <div class="flex items-center space-x-2">
+                    <div class="w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
+                    <span class="text-green-400 text-xs">Online</span>
+                </div>
+            </div>
+            
+            <!-- User Profile -->
+            <div class="flex items-center space-x-3 mb-6 p-3 bg-gray-700/50 rounded-lg">
+                <div class="w-10 h-10 bg-gradient-to-r from-purple-500 to-blue-500 rounded-full flex items-center justify-center">
+                    <i class="fas fa-user text-white text-sm"></i>
+                </div>
+                <div>
+                    <p class="text-white font-medium text-sm">Welcome back!</p>
+                    <p class="text-gray-400 text-xs">Premium User</p>
+                </div>
+            </div>
+            
+            <!-- New Chat Button -->
+            <button id="newChatBtn" class="w-full bg-gradient-to-r from-purple-500 to-blue-500 text-white py-3 px-4 rounded-lg hover:from-purple-600 hover:to-blue-600 transition-all duration-300 mb-6 font-medium shadow-lg">
+                <i class="fas fa-plus mr-2"></i>New Chat
+            </button>
+            
+            <!-- Quick Actions -->
+            <div class="grid grid-cols-2 gap-3 mb-6">
+                <button id="clearChatBtn" class="p-3 bg-red-500/20 text-red-400 rounded-lg hover:bg-red-500/30 transition-all duration-300 text-sm">
+                    <i class="fas fa-trash mr-1"></i>Clear
+                </button>
+                <button id="exportChatBtn" class="p-3 bg-green-500/20 text-green-400 rounded-lg hover:bg-green-500/30 transition-all duration-300 text-sm">
+                    <i class="fas fa-download mr-1"></i>Export
+                </button>
+            </div>
+            
+            <!-- Chat History -->
+            <div class="space-y-3">
+                <h5 class="text-gray-300 text-sm font-medium mb-3 flex items-center">
+                    <i class="fas fa-history mr-2"></i>Chat History
+                </h5>
+                <div id="chatHistory" class="space-y-2 max-h-64 overflow-y-auto">
+                    <!-- Chat history items will be added here -->
+                </div>
+            </div>
+            
+            <!-- Settings -->
+            <div class="mt-8 pt-6 border-t border-gray-700">
+                <button id="apiSettingsBtn" class="w-full text-left text-gray-400 hover:text-white transition-colors duration-300 p-2 rounded">
+                    <i class="fas fa-key mr-3"></i>API Settings
+                </button>
+                <button class="w-full text-left text-gray-400 hover:text-white transition-colors duration-300 p-2 rounded">
+                    <i class="fas fa-cog mr-3"></i>Settings
+                </button>
+                <button class="w-full text-left text-gray-400 hover:text-white transition-colors duration-300 p-2 rounded">
+                    <i class="fas fa-question-circle mr-3"></i>Help & Support
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Overlay -->
+    <div id="overlay" class="fixed inset-0 bg-black/50 opacity-0 pointer-events-none transition-opacity duration-300 z-30"></div>
+
+    <!-- Auth Modal -->
+    <div id="authModal" class="fixed inset-0 flex items-center justify-center z-50 opacity-0 pointer-events-none transition-opacity duration-300">
+        <div class="bg-white dark:bg-gray-800 rounded-2xl p-8 w-96 max-w-md mx-4 transform scale-95 transition-transform duration-300 shadow-2xl">
+            <div id="loginForm">
+                <div class="text-center mb-6">
+                    <div class="w-16 h-16 bg-gradient-to-r from-purple-500 to-blue-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-robot text-white text-2xl"></i>
+                    </div>
+                    <h2 class="text-2xl font-bold text-gray-800 dark:text-white">Welcome to Propeller AI</h2>
+                    <p class="text-gray-600 dark:text-gray-300 text-sm mt-2">Your intelligent conversation partner</p>
+                </div>
+                <form class="space-y-4">
+                    <div>
+                        <input type="email" id="loginEmail" placeholder="Email" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all duration-300 dark:bg-gray-700 dark:text-white">
+                    </div>
+                    <div>
+                        <input type="password" id="loginPassword" placeholder="Password" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all duration-300 dark:bg-gray-700 dark:text-white">
+                    </div>
+                    <button type="button" onclick="login()" class="w-full bg-gradient-to-r from-purple-500 to-blue-500 text-white py-3 rounded-lg hover:from-purple-600 hover:to-blue-600 transition-all duration-300 font-medium shadow-lg">
+                        <i class="fas fa-sign-in-alt mr-2"></i>Sign In
+                    </button>
+                </form>
+                <p class="text-center text-gray-600 dark:text-gray-300 mt-4">
+                    Don't have an account? 
+                    <button onclick="showSignup()" class="text-purple-500 hover:text-purple-600 font-medium">Sign up</button>
+                </p>
+            </div>
+            
+            <div id="signupForm" class="hidden">
+                <div class="text-center mb-6">
+                    <div class="w-16 h-16 bg-gradient-to-r from-purple-500 to-blue-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-robot text-white text-2xl"></i>
+                    </div>
+                    <h2 class="text-2xl font-bold text-gray-800 dark:text-white">Join Propeller AI</h2>
+                    <p class="text-gray-600 dark:text-gray-300 text-sm mt-2">Create your account to get started</p>
+                </div>
+                <form class="space-y-4">
+                    <div>
+                        <input type="email" id="signupEmail" placeholder="Email" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all duration-300 dark:bg-gray-700 dark:text-white">
+                    </div>
+                    <div>
+                        <input type="password" id="signupPassword" placeholder="Password" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all duration-300 dark:bg-gray-700 dark:text-white">
+                    </div>
+                    <div>
+                        <input type="password" id="confirmPassword" placeholder="Confirm Password" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all duration-300 dark:bg-gray-700 dark:text-white">
+                    </div>
+                    <button type="button" onclick="signup()" class="w-full bg-gradient-to-r from-purple-500 to-blue-500 text-white py-3 rounded-lg hover:from-purple-600 hover:to-blue-600 transition-all duration-300 font-medium shadow-lg">
+                        <i class="fas fa-user-plus mr-2"></i>Create Account
+                    </button>
+                </form>
+                <p class="text-center text-gray-600 dark:text-gray-300 mt-4">
+                    Already have an account? 
+                    <button onclick="showLogin()" class="text-purple-500 hover:text-purple-600 font-medium">Sign in</button>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Chat Interface -->
+    <div id="mainInterface" class="hidden min-h-screen flex flex-col">
+        <!-- Header -->
+        <div class="glass-effect border-b border-white/20 p-4">
+            <div class="max-w-4xl mx-auto flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <div class="w-10 h-10 bg-gradient-to-r from-purple-500 to-blue-500 rounded-full flex items-center justify-center">
+                        <i class="fas fa-robot text-white"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-white font-bold text-lg">Propeller AI</h1>
+                        <p class="text-white/70 text-sm" id="statusText">Ready to help</p>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-3">
+                    <button id="voiceToggle" class="p-2 bg-white/20 rounded-lg hover:bg-white/30 transition-all duration-300">
+                        <i class="fas fa-microphone text-white"></i>
+                    </button>
+                    <button id="searchToggle" class="p-2 bg-white/20 rounded-lg hover:bg-white/30 transition-all duration-300">
+                        <i class="fas fa-search text-white"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Chat Container -->
+        <div class="flex-1 flex flex-col max-w-4xl mx-auto w-full px-4">
+            <!-- Greeting -->
+            <div id="greeting" class="flex-1 flex items-center justify-center">
+                <div class="text-center chat-animation">
+                    <div class="w-20 h-20 bg-gradient-to-r from-purple-500 to-blue-500 rounded-full flex items-center justify-center mx-auto mb-6 shadow-2xl">
+                        <i class="fas fa-robot text-white text-3xl"></i>
+                    </div>
+                    <h1 class="text-4xl font-bold text-white mb-4">Hello There!</h1>
+                    <p class="text-white/80 text-lg mb-8">I'm Propeller AI, your intelligent assistant. How can I help you today?</p>
+                    
+                    <!-- Quick Start Buttons -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-2xl mx-auto">
+                        <button class="quick-start-btn p-4 bg-white/10 backdrop-blur-sm rounded-xl hover:bg-white/20 transition-all duration-300 text-white">
+                            <i class="fas fa-lightbulb text-2xl mb-2 text-yellow-400"></i>
+                            <p class="font-medium">Get Ideas</p>
+                            <p class="text-sm text-white/70">Brainstorm and create</p>
+                        </button>
+                        <button class="quick-start-btn p-4 bg-white/10 backdrop-blur-sm rounded-xl hover:bg-white/20 transition-all duration-300 text-white">
+                            <i class="fas fa-code text-2xl mb-2 text-green-400"></i>
+                            <p class="font-medium">Write Code</p>
+                            <p class="text-sm text-white/70">Programming help</p>
+                        </button>
+                        <button class="quick-start-btn p-4 bg-white/10 backdrop-blur-sm rounded-xl hover:bg-white/20 transition-all duration-300 text-white">
+                            <i class="fas fa-question-circle text-2xl mb-2 text-blue-400"></i>
+                            <p class="font-medium">Ask Questions</p>
+                            <p class="text-sm text-white/70">Get answers</p>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Messages Area -->
+            <div id="messagesArea" class="hidden flex-1 py-6 space-y-4 overflow-y-auto scroll-smooth" style="max-height: calc(100vh - 200px);">
+                <!-- Messages will appear here -->
+            </div>
+
+            <!-- Scroll to Bottom Button -->
+            <button id="scrollToBottom" class="hidden fixed bottom-32 right-8 p-3 bg-purple-500 text-white rounded-full shadow-lg hover:bg-purple-600 transition-all duration-300 z-10">
+                <i class="fas fa-arrow-down"></i>
+            </button>
+
+            <!-- Typing Indicator -->
+            <div id="typingIndicator" class="hidden flex items-center space-x-2 p-4">
+                <div class="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center">
+                    <i class="fas fa-robot text-gray-600 text-sm"></i>
+                </div>
+                <div class="bg-gray-200 rounded-2xl px-4 py-2 flex items-center space-x-1">
+                    <div class="w-2 h-2 bg-gray-500 rounded-full loading-dots"></div>
+                    <div class="w-2 h-2 bg-gray-500 rounded-full loading-dots"></div>
+                    <div class="w-2 h-2 bg-gray-500 rounded-full loading-dots"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Input Area -->
+        <div class="p-4 glass-effect border-t border-white/20">
+            <div class="max-w-4xl mx-auto">
+                <div class="bg-white/90 backdrop-blur-sm rounded-2xl p-4 shadow-2xl">
+                    <div class="flex items-end space-x-4">
+                        <!-- File Upload -->
+                        <button id="fileUpload" class="p-2 text-gray-500 hover:text-purple-500 transition-colors duration-300">
+                            <i class="fas fa-paperclip text-lg"></i>
+                        </button>
+                        
+                        <!-- Text Input -->
+                        <div class="flex-1 relative">
+                            <textarea 
+                                id="messageInput"
+                                placeholder="Type your message... (Shift+Enter for new line)" 
+                                class="w-full bg-transparent text-gray-800 placeholder-gray-500 text-lg outline-none resize-none resizable-textarea"
+                                rows="1"
+                                style="max-height: 120px;"
+                            ></textarea>
+                        </div>
+                        
+                        <!-- Voice Input -->
+                        <button id="voiceInput" class="p-2 text-gray-500 hover:text-purple-500 transition-colors duration-300">
+                            <i class="fas fa-microphone text-lg"></i>
+                        </button>
+                        
+                        <!-- Send Button -->
+                        <button id="sendBtn" class="bg-gradient-to-r from-purple-500 to-blue-500 text-white p-3 rounded-xl hover:from-purple-600 hover:to-blue-600 transition-all duration-300 transform hover:scale-105 shadow-lg">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                        
+                        <!-- Stop Button (hidden by default) -->
+                        <button id="stopBtn" class="hidden bg-red-500 text-white p-3 rounded-xl hover:bg-red-600 transition-all duration-300">
+                            <i class="fas fa-stop"></i>
+                        </button>
+                    </div>
+                    
+                    <!-- Character Count -->
+                    <div class="flex justify-between items-center mt-2 text-xs text-gray-500">
+                        <span id="charCount">0 characters</span>
+                        <span class="text-gray-400">Press Enter to send • Shift+Enter for new line</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Search Modal -->
+    <div id="searchModal" class="fixed inset-0 flex items-center justify-center z-50 opacity-0 pointer-events-none transition-opacity duration-300">
+        <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 w-96 max-w-md mx-4 transform scale-95 transition-transform duration-300 shadow-2xl">
+            <h3 class="text-lg font-bold text-gray-800 dark:text-white mb-4">Search Chat History</h3>
+            <input type="text" id="searchInput" placeholder="Search messages..." class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 outline-none dark:bg-gray-700 dark:text-white">
+            <div class="flex justify-end space-x-3 mt-4">
+                <button onclick="closeSearch()" class="px-4 py-2 text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-white">Cancel</button>
+                <button onclick="performSearch()" class="px-4 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600">Search</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- API Settings Modal -->
+    <div id="apiSettingsModal" class="fixed inset-0 flex items-center justify-center z-50 opacity-0 pointer-events-none transition-opacity duration-300">
+        <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 w-96 max-w-md mx-4 transform scale-95 transition-transform duration-300 shadow-2xl">
+            <h3 class="text-lg font-bold text-gray-800 dark:text-white mb-4 flex items-center">
+                <i class="fas fa-key mr-2 text-purple-500"></i>API Configuration
+            </h3>
+            
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">API Provider</label>
+                    <select id="apiProvider" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 outline-none dark:bg-gray-700 dark:text-white">
+                        <option value="openai">OpenAI (GPT)</option>
+                        <option value="anthropic">Anthropic (Claude)</option>
+                        <option value="google">Google (Gemini)</option>
+                        <option value="custom">Custom API</option>
+                    </select>
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">API Key</label>
+                    <input type="password" id="apiKey" placeholder="Enter your API key..." class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 outline-none dark:bg-gray-700 dark:text-white">
+                    <p class="text-xs text-gray-500 mt-1">Your API key is stored locally and never shared</p>
+                </div>
+                
+                <div id="customApiUrl" class="hidden">
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">API Endpoint URL</label>
+                    <input type="url" id="apiUrl" placeholder="https://your-api-endpoint.com/chat" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 outline-none dark:bg-gray-700 dark:text-white">
+                </div>
+            </div>
+            
+            <div class="flex justify-end space-x-3 mt-6">
+                <button onclick="closeApiSettings()" class="px-4 py-2 text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-white">Cancel</button>
+                <button onclick="saveApiSettings()" class="px-4 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600 flex items-center">
+                    <i class="fas fa-save mr-2"></i>Save Settings
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let isLoggedIn = false;
+        let chatHistory = [];
+        let currentChatId = null;
+        let messageCount = 0;
+        let isDarkMode = false;
+        let isTyping = false;
+        let currentResponse = '';
+        let isGenerating = false;
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            showAuthModal();
+            setupEventListeners();
+            loadTheme();
+        });
+
+        // Theme Management
+        function loadTheme() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') {
+                toggleTheme();
+            }
+        }
+
+        function toggleTheme() {
+            isDarkMode = !isDarkMode;
+            const body = document.getElementById('mainBody');
+            const themeIcon = document.getElementById('themeIcon');
+            
+            if (isDarkMode) {
+                body.classList.add('dark');
+                body.classList.remove('gradient-bg');
+                body.classList.add('dark-mode');
+                themeIcon.className = 'fas fa-sun text-white text-lg';
+                localStorage.setItem('theme', 'dark');
+            } else {
+                body.classList.remove('dark', 'dark-mode');
+                body.classList.add('gradient-bg');
+                themeIcon.className = 'fas fa-moon text-white text-lg';
+                localStorage.setItem('theme', 'light');
+            }
+        }
+
+        // Event Listeners Setup
+        function setupEventListeners() {
+            document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+            
+            // Sidebar events
+            document.getElementById('sidebarToggle').addEventListener('mouseenter', () => {
+                if (isLoggedIn) openSidebar();
+            });
+            document.getElementById('sidebarToggle').addEventListener('click', () => {
+                if (isLoggedIn) openSidebar();
+            });
+            document.getElementById('sidebar').addEventListener('mouseleave', closeSidebar);
+            
+            // Chat events
+            document.getElementById('newChatBtn').addEventListener('click', startNewChat);
+            document.getElementById('apiSettingsBtn').addEventListener('click', openApiSettings);
+            document.getElementById('clearChatBtn').addEventListener('click', clearChat);
+            document.getElementById('exportChatBtn').addEventListener('click', exportChat);
+            document.getElementById('sendBtn').addEventListener('click', sendMessage);
+            document.getElementById('stopBtn').addEventListener('click', stopGeneration);
+            document.getElementById('searchToggle').addEventListener('click', openSearch);
+            
+            // API provider change event
+            document.getElementById('apiProvider').addEventListener('change', function() {
+                const customUrlDiv = document.getElementById('customApiUrl');
+                if (this.value === 'custom') {
+                    customUrlDiv.classList.remove('hidden');
+                } else {
+                    customUrlDiv.classList.add('hidden');
+                }
+            });
+            
+            // Input events
+            const messageInput = document.getElementById('messageInput');
+            messageInput.addEventListener('keydown', handleKeyPress);
+            messageInput.addEventListener('input', handleInputChange);
+            
+            // Quick start buttons
+            document.querySelectorAll('.quick-start-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const text = e.currentTarget.querySelector('p').textContent;
+                    document.getElementById('messageInput').value = `Help me with: ${text}`;
+                    sendMessage();
+                });
+            });
+            
+            // Scroll detection
+            const messagesArea = document.getElementById('messagesArea');
+            messagesArea.addEventListener('scroll', handleScroll);
+        }
+
+        // Auth Functions
+        function showAuthModal() {
+            const modal = document.getElementById('authModal');
+            const overlay = document.getElementById('overlay');
+            modal.classList.remove('opacity-0', 'pointer-events-none');
+            modal.querySelector('div').classList.remove('scale-95');
+            modal.querySelector('div').classList.add('scale-100');
+            overlay.classList.remove('opacity-0', 'pointer-events-none');
+        }
+
+        function hideAuthModal() {
+            const modal = document.getElementById('authModal');
+            const overlay = document.getElementById('overlay');
+            modal.classList.add('opacity-0', 'pointer-events-none');
+            modal.querySelector('div').classList.add('scale-95');
+            modal.querySelector('div').classList.remove('scale-100');
+            overlay.classList.add('opacity-0', 'pointer-events-none');
+        }
+
+        function showSignup() {
+            document.getElementById('loginForm').classList.add('hidden');
+            document.getElementById('signupForm').classList.remove('hidden');
+        }
+
+        function showLogin() {
+            document.getElementById('signupForm').classList.add('hidden');
+            document.getElementById('loginForm').classList.remove('hidden');
+        }
+
+        function login() {
+            const email = document.getElementById('loginEmail').value.trim();
+            const password = document.getElementById('loginPassword').value.trim();
+            
+            if (!email || !password) {
+                showNotification('Please fill in all fields', 'error');
+                return;
+            }
+            
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                showNotification('Please enter a valid email address', 'error');
+                return;
+            }
+            
+            if (password.length < 6) {
+                showNotification('Password must be at least 6 characters long', 'error');
+                return;
+            }
+            
+            isLoggedIn = true;
+            hideAuthModal();
+            showMainInterface();
+            showNotification('Welcome back! 🎉', 'success');
+        }
+
+        function signup() {
+            const email = document.getElementById('signupEmail').value.trim();
+            const password = document.getElementById('signupPassword').value.trim();
+            const confirmPassword = document.getElementById('confirmPassword').value.trim();
+            
+            if (!email || !password || !confirmPassword) {
+                showNotification('Please fill in all fields', 'error');
+                return;
+            }
+            
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                showNotification('Please enter a valid email address', 'error');
+                return;
+            }
+            
+            if (password.length < 6) {
+                showNotification('Password must be at least 6 characters long', 'error');
+                return;
+            }
+            
+            if (password !== confirmPassword) {
+                showNotification('Passwords do not match', 'error');
+                return;
+            }
+            
+            isLoggedIn = true;
+            hideAuthModal();
+            showMainInterface();
+            showNotification('Account created successfully! Welcome to Propeller AI! 🚀', 'success');
+        }
+
+        function showMainInterface() {
+            document.getElementById('mainInterface').classList.remove('hidden');
+            document.getElementById('sidebarToggle').classList.remove('hidden');
+            
+            // Load API settings and update status
+            const apiSettings = getApiSettings();
+            if (apiSettings.apiKey) {
+                updateStatus(`Connected to ${apiSettings.provider.charAt(0).toUpperCase() + apiSettings.provider.slice(1)}`);
+            } else {
+                updateStatus('Configure API to start chatting');
+            }
+            
+            setTimeout(() => {
+                startNewChat();
+            }, 100);
+        }
+
+        // Sidebar Functions
+        function openSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('overlay');
+            sidebar.classList.remove('-translate-x-full');
+            overlay.classList.remove('opacity-0', 'pointer-events-none');
+        }
+
+        function closeSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('overlay');
+            sidebar.classList.add('-translate-x-full');
+            overlay.classList.add('opacity-0', 'pointer-events-none');
+        }
+
+        // Chat Functions
+        function startNewChat() {
+            currentChatId = Date.now();
+            messageCount = 0;
+            document.getElementById('messagesArea').innerHTML = '';
+            document.getElementById('messagesArea').classList.add('hidden');
+            document.getElementById('greeting').classList.remove('hidden');
+            document.getElementById('messageInput').value = '';
+            updateCharCount();
+            updateStatus('Ready to help');
+            closeSidebar();
+        }
+
+        function clearChat() {
+            if (confirm('Are you sure you want to clear this chat?')) {
+                startNewChat();
+                showNotification('Chat cleared successfully', 'success');
+            }
+        }
+
+        function exportChat() {
+            const messages = document.querySelectorAll('#messagesArea > div');
+            let chatText = `Propeller AI Chat Export\nDate: ${new Date().toLocaleString()}\n\n`;
+            
+            messages.forEach(msg => {
+                const isUser = msg.querySelector('.bg-gradient-to-r');
+                const text = msg.querySelector('p').textContent;
+                const timestamp = msg.querySelector('.text-xs')?.textContent || '';
+                chatText += `${isUser ? 'You' : 'Propeller AI'} (${timestamp}): ${text}\n\n`;
+            });
+            
+            const blob = new Blob([chatText], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `propeller-chat-${Date.now()}.txt`;
+            a.click();
+            URL.revokeObjectURL(url);
+            
+            showNotification('Chat exported successfully! 📄', 'success');
+        }
+
+        function handleKeyPress(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage();
+            }
+        }
+
+        function handleInputChange(e) {
+            const textarea = e.target;
+            textarea.style.height = 'auto';
+            textarea.style.height = Math.min(textarea.scrollHeight, 120) + 'px';
+            updateCharCount();
+        }
+
+        function updateCharCount() {
+            const input = document.getElementById('messageInput');
+            const count = input.value.length;
+            document.getElementById('charCount').textContent = `${count} characters`;
+        }
+
+        function handleScroll() {
+            const messagesArea = document.getElementById('messagesArea');
+            const scrollButton = document.getElementById('scrollToBottom');
+            const isAtBottom = messagesArea.scrollTop + messagesArea.clientHeight >= messagesArea.scrollHeight - 10;
+            
+            if (isAtBottom) {
+                scrollButton.classList.add('hidden');
+            } else {
+                scrollButton.classList.remove('hidden');
+            }
+        }
+
+        function scrollToBottom() {
+            const messagesArea = document.getElementById('messagesArea');
+            messagesArea.scrollTop = messagesArea.scrollHeight;
+        }
+
+        function updateStatus(status) {
+            document.getElementById('statusText').textContent = status;
+        }
+
+        function showTypingIndicator() {
+            document.getElementById('typingIndicator').classList.remove('hidden');
+            updateStatus('Typing...');
+            scrollToBottom();
+        }
+
+        function hideTypingIndicator() {
+            document.getElementById('typingIndicator').classList.add('hidden');
+            updateStatus('Ready to help');
+        }
+
+        function addMessage(message, isUser = false, showActions = false) {
+            const messagesArea = document.getElementById('messagesArea');
+            const messageDiv = document.createElement('div');
+            const timestamp = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+            
+            messageDiv.className = `flex ${isUser ? 'justify-end' : 'justify-start'} message-bubble`;
+            
+            const avatarHtml = isUser ? 
+                `<div class="w-8 h-8 bg-gradient-to-r from-purple-500 to-blue-500 rounded-full flex items-center justify-center ml-3 flex-shrink-0">
+                    <i class="fas fa-user text-white text-sm"></i>
+                </div>` :
+                `<div class="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center mr-3 flex-shrink-0">
+                    <i class="fas fa-robot text-gray-600 text-sm"></i>
+                </div>`;
+            
+            const actionsHtml = !isUser && showActions ? `
+                <div class="flex items-center space-x-2 mt-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    <button onclick="copyMessage(this)" class="p-1 text-gray-400 hover:text-gray-600 transition-colors duration-300" title="Copy">
+                        <i class="fas fa-copy text-xs"></i>
+                    </button>
+                    <button onclick="regenerateResponse()" class="p-1 text-gray-400 hover:text-gray-600 transition-colors duration-300" title="Regenerate">
+                        <i class="fas fa-redo text-xs"></i>
+                    </button>
+                    <button onclick="speakMessage(this)" class="p-1 text-gray-400 hover:text-gray-600 transition-colors duration-300" title="Speak">
+                        <i class="fas fa-volume-up text-xs"></i>
+                    </button>
+                    <button onclick="rateMessage(this, 'up')" class="p-1 text-gray-400 hover:text-green-500 transition-colors duration-300" title="Good response">
+                        <i class="fas fa-thumbs-up text-xs"></i>
+                    </button>
+                    <button onclick="rateMessage(this, 'down')" class="p-1 text-gray-400 hover:text-red-500 transition-colors duration-300" title="Poor response">
+                        <i class="fas fa-thumbs-down text-xs"></i>
+                    </button>
+                </div>
+            ` : '';
+            
+            messageDiv.innerHTML = `
+                ${!isUser ? avatarHtml : ''}
+                <div class="group max-w-xs lg:max-w-md">
+                    <div class="${isUser ? 'bg-gradient-to-r from-purple-500 to-blue-500 text-white' : 'bg-white text-gray-800 border border-gray-300 shadow-sm'} px-4 py-3 rounded-2xl">
+                        <p class="text-sm whitespace-pre-wrap">${message}</p>
+                    </div>
+                    <div class="flex ${isUser ? 'justify-end' : 'justify-start'} mt-1">
+                        <span class="text-xs text-gray-500">${timestamp}</span>
+                    </div>
+                    ${actionsHtml}
+                </div>
+                ${isUser ? avatarHtml : ''}
+            `;
+            
+            messagesArea.appendChild(messageDiv);
+            
+            // Show messages area and hide greeting after first message
+            if (messageCount === 0) {
+                document.getElementById('greeting').classList.add('hidden');
+                messagesArea.classList.remove('hidden');
+            }
+            
+            messageCount++;
+            scrollToBottom();
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('messageInput');
+            const message = input.value.trim();
+            
+            if (message && !isGenerating) {
+                
+                
+                addMessage(message, true);
+                input.value = '';
+                input.style.height = 'auto';
+                updateCharCount();
+                
+                // Add to chat history
+                if (!chatHistory.find(chat => chat.id === currentChatId)) {
+                    const chatItem = {
+                        id: currentChatId,
+                        title: message.substring(0, 30) + (message.length > 30 ? '...' : ''),
+                        timestamp: new Date().toLocaleString(),
+                        messageCount: 1
+                    };
+                    chatHistory.unshift(chatItem);
+                    updateChatHistoryUI();
+                }
+                
+                // Show typing indicator and generate response
+                isGenerating = true;
+                document.getElementById('sendBtn').classList.add('hidden');
+                document.getElementById('stopBtn').classList.remove('hidden');
+                showTypingIndicator();
+                
+                // Call actual API instead of simulated response
+                callAPI(message);
+            }
+        }
+
+        // API Integration Functions
+        // Replace the existing callAPI function in your HTML file with this:
+
+async function callAPI(message) {
+    try {
+        // Call your Flask backend instead of external APIs directly
+        const response = await fetch('/get', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                message: message
+            })
+        });
+        
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        
+        hideTypingIndicator();
+        displayTypingResponse(data.reply);
+        
+    } catch (error) {
+        hideTypingIndicator();
+        finishGeneration();
+        showNotification(`Error: ${error.message}`, 'error');
+        console.error('API Error:', error);
+        
+        // Fallback error message
+        displayTypingResponse("I'm sorry, I'm having trouble connecting right now. Please try again later.");
+    }
+}
+
+// Remove or comment out these functions since you're using the backend:
+// - callOpenAI()
+// - callAnthropic() 
+// - callGoogle()
+// - callCustomAPI()
+
+// Also update the API settings to be simpler since the backend handles the API choice:
+function saveApiSettings() {
+    const provider = document.getElementById('apiProvider').value;
+    const apiKey = document.getElementById('apiKey').value.trim();
+    
+    if (!apiKey && provider !== 'backend') {
+        showNotification('API key configured on backend', 'info');
+    }
+    
+    // For now, just save the provider preference (backend handles actual API calls)
+    const settings = {
+        provider: provider || 'backend'
+    };
+    
+    localStorage.setItem('propeller_api_settings', JSON.stringify(settings));
+    closeApiSettings();
+    showNotification('Settings saved! Using backend API integration.', 'success');
+    updateStatus('Connected via Backend');
+}
+
+        function displayTypingResponse(responseText) {
+            if (!isGenerating) return;
+            
+            // Create message container
+            let currentText = '';
+            let index = 0;
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'flex justify-start message-bubble';
+            
+            const timestamp = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+            messageDiv.innerHTML = `
+                <div class="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center mr-3 flex-shrink-0">
+                    <i class="fas fa-robot text-gray-600 text-sm"></i>
+                </div>
+                <div class="group max-w-xs lg:max-w-md">
+                    <div class="bg-white text-gray-800 border border-gray-300 shadow-sm px-4 py-3 rounded-2xl">
+                        <p class="text-sm whitespace-pre-wrap" id="typingText"></p>
+                    </div>
+                    <div class="flex justify-start mt-1">
+                        <span class="text-xs text-gray-500">${timestamp}</span>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('messagesArea').appendChild(messageDiv);
+            scrollToBottom();
+            
+            // Typing animation
+            const typingInterval = setInterval(() => {
+                if (!isGenerating || index >= responseText.length) {
+                    clearInterval(typingInterval);
+                    if (isGenerating) {
+                        addActionButtons(messageDiv);
+                        finishGeneration();
+                    }
+                    return;
+                }
+                
+                currentText += responseText[index];
+                document.getElementById('typingText').textContent = currentText;
+                index++;
+                scrollToBottom();
+            }, 30 + Math.random() * 20);
+        }
+
+        function addActionButtons(messageDiv) {
+            const actionsHtml = `
+                <div class="flex items-center space-x-2 mt-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    <button onclick="copyMessage(this)" class="p-1 text-gray-400 hover:text-gray-600 transition-colors duration-300" title="Copy">
+                        <i class="fas fa-copy text-xs"></i>
+                    </button>
+                    <button onclick="regenerateResponse()" class="p-1 text-gray-400 hover:text-gray-600 transition-colors duration-300" title="Regenerate">
+                        <i class="fas fa-redo text-xs"></i>
+                    </button>
+                    <button onclick="speakMessage(this)" class="p-1 text-gray-400 hover:text-gray-600 transition-colors duration-300" title="Speak">
+                        <i class="fas fa-volume-up text-xs"></i>
+                    </button>
+                    <button onclick="rateMessage(this, 'up')" class="p-1 text-gray-400 hover:text-green-500 transition-colors duration-300" title="Good response">
+                        <i class="fas fa-thumbs-up text-xs"></i>
+                    </button>
+                    <button onclick="rateMessage(this, 'down')" class="p-1 text-gray-400 hover:text-red-500 transition-colors duration-300" title="Poor response">
+                        <i class="fas fa-thumbs-down text-xs"></i>
+                    </button>
+                </div>
+            `;
+            messageDiv.querySelector('.group').insertAdjacentHTML('beforeend', actionsHtml);
+        }
+
+        function finishGeneration() {
+            isGenerating = false;
+            document.getElementById('sendBtn').classList.remove('hidden');
+            document.getElementById('stopBtn').classList.add('hidden');
+            updateStatus('Ready to help');
+        }
+
+        function stopGeneration() {
+            isGenerating = false;
+            finishGeneration();
+            showNotification('Response stopped', 'info');
+        }
+
+        function regenerateResponse() {
+            if (isGenerating) return;
+            
+            // Remove the last bot message
+            const messages = document.querySelectorAll('#messagesArea > div');
+            const lastMessage = messages[messages.length - 1];
+            if (lastMessage && !lastMessage.querySelector('.bg-gradient-to-r')) {
+                lastMessage.remove();
+                messageCount--;
+            }
+            
+            // Get the last user message
+            const userMessages = Array.from(messages).filter(msg => msg.querySelector('.bg-gradient-to-r'));
+            const lastUserMessage = userMessages[userMessages.length - 1];
+            if (lastUserMessage) {
+                const userText = lastUserMessage.querySelector('p').textContent;
+                
+                isGenerating = true;
+                document.getElementById('sendBtn').classList.add('hidden');
+                document.getElementById('stopBtn').classList.remove('hidden');
+                showTypingIndicator();
+                
+                setTimeout(() => {
+                    generateResponse(userText);
+                }, 1000);
+            }
+        }
+
+        function copyMessage(button) {
+            const messageText = button.closest('.group').querySelector('p').textContent;
+            navigator.clipboard.writeText(messageText).then(() => {
+                showNotification('Message copied to clipboard! 📋', 'success');
+            });
+        }
+
+        function speakMessage(button) {
+            const messageText = button.closest('.group').querySelector('p').textContent;
+            if ('speechSynthesis' in window) {
+                const utterance = new SpeechSynthesisUtterance(messageText);
+                utterance.rate = 0.8;
+                utterance.pitch = 1;
+                speechSynthesis.speak(utterance);
+                showNotification('Speaking message... 🔊', 'info');
+            } else {
+                showNotification('Speech synthesis not supported in this browser', 'error');
+            }
+        }
+
+        function rateMessage(button, rating) {
+            const icon = button.querySelector('i');
+            if (rating === 'up') {
+                icon.className = 'fas fa-thumbs-up text-xs text-green-500';
+                showNotification('Thanks for your feedback! 👍', 'success');
+            } else {
+                icon.className = 'fas fa-thumbs-down text-xs text-red-500';
+                showNotification('Thanks for your feedback. I\'ll try to improve! 👎', 'info');
+            }
+            button.disabled = true;
+        }
+
+        function updateChatHistoryUI() {
+            const historyContainer = document.getElementById('chatHistory');
+            historyContainer.innerHTML = '';
+            
+            chatHistory.slice(0, 10).forEach(chat => {
+                const chatItem = document.createElement('div');
+                chatItem.className = 'p-3 bg-gray-700/50 rounded-lg hover:bg-gray-600/50 cursor-pointer transition-all duration-300 border-l-2 border-transparent hover:border-purple-500';
+                chatItem.innerHTML = `
+                    <p class="text-white text-sm font-medium truncate">${chat.title}</p>
+                    <div class="flex justify-between items-center mt-1">
+                        <p class="text-gray-400 text-xs">${chat.timestamp}</p>
+                        <span class="text-xs text-purple-400">${chat.messageCount || 1} msgs</span>
+                    </div>
+                `;
+                chatItem.onclick = () => loadChat(chat.id);
+                historyContainer.appendChild(chatItem);
+            });
+            
+            if (chatHistory.length === 0) {
+                historyContainer.innerHTML = '<p class="text-gray-500 text-sm text-center py-4">No chat history yet</p>';
+            }
+        }
+
+        function loadChat(chatId) {
+            currentChatId = chatId;
+            closeSidebar();
+            showNotification('Chat loaded successfully', 'success');
+        }
+
+        // Search Functions
+        function openSearch() {
+            const modal = document.getElementById('searchModal');
+            const overlay = document.getElementById('overlay');
+            modal.classList.remove('opacity-0', 'pointer-events-none');
+            modal.querySelector('div').classList.remove('scale-95');
+            modal.querySelector('div').classList.add('scale-100');
+            overlay.classList.remove('opacity-0', 'pointer-events-none');
+            document.getElementById('searchInput').focus();
+        }
+
+        function closeSearch() {
+            const modal = document.getElementById('searchModal');
+            const overlay = document.getElementById('overlay');
+            modal.classList.add('opacity-0', 'pointer-events-none');
+            modal.querySelector('div').classList.add('scale-95');
+            modal.querySelector('div').classList.remove('scale-100');
+            overlay.classList.add('opacity-0', 'pointer-events-none');
+        }
+
+        function performSearch() {
+            const searchTerm = document.getElementById('searchInput').value.trim();
+            if (searchTerm) {
+                // Highlight matching messages
+                const messages = document.querySelectorAll('#messagesArea p');
+                let found = false;
+                
+                messages.forEach(msg => {
+                    if (msg.textContent.toLowerCase().includes(searchTerm.toLowerCase())) {
+                        msg.style.backgroundColor = 'yellow';
+                        msg.style.color = 'black';
+                        found = true;
+                        msg.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
+                });
+                
+                if (found) {
+                    showNotification(`Found "${searchTerm}" in chat history`, 'success');
+                } else {
+                    showNotification(`No results found for "${searchTerm}"`, 'info');
+                }
+                
+                closeSearch();
+                
+                // Clear highlights after 3 seconds
+                setTimeout(() => {
+                    messages.forEach(msg => {
+                        msg.style.backgroundColor = '';
+                        msg.style.color = '';
+                    });
+                }, 3000);
+            }
+        }
+
+        // API Settings Functions
+        function openApiSettings() {
+            const modal = document.getElementById('apiSettingsModal');
+            const overlay = document.getElementById('overlay');
+            
+            // Load existing settings
+            const settings = getApiSettings();
+            document.getElementById('apiProvider').value = settings.provider || 'openai';
+            document.getElementById('apiKey').value = settings.apiKey || '';
+            document.getElementById('apiUrl').value = settings.apiUrl || '';
+            
+            // Show/hide custom URL field
+            const customUrlDiv = document.getElementById('customApiUrl');
+            if (settings.provider === 'custom') {
+                customUrlDiv.classList.remove('hidden');
+            } else {
+                customUrlDiv.classList.add('hidden');
+            }
+            
+            modal.classList.remove('opacity-0', 'pointer-events-none');
+            modal.querySelector('div').classList.remove('scale-95');
+            modal.querySelector('div').classList.add('scale-100');
+            overlay.classList.remove('opacity-0', 'pointer-events-none');
+            closeSidebar();
+        }
+
+        function closeApiSettings() {
+            const modal = document.getElementById('apiSettingsModal');
+            const overlay = document.getElementById('overlay');
+            modal.classList.add('opacity-0', 'pointer-events-none');
+            modal.querySelector('div').classList.add('scale-95');
+            modal.querySelector('div').classList.remove('scale-100');
+            overlay.classList.add('opacity-0', 'pointer-events-none');
+        }
+
+        function saveApiSettings() {
+            const provider = document.getElementById('apiProvider').value;
+            const apiKey = document.getElementById('apiKey').value.trim();
+            const apiUrl = document.getElementById('apiUrl').value.trim();
+            
+            if (!apiKey) {
+                showNotification('Please enter an API key', 'error');
+                return;
+            }
+            
+            if (provider === 'custom' && !apiUrl) {
+                showNotification('Please enter an API endpoint URL for custom provider', 'error');
+                return;
+            }
+            
+            const settings = {
+                provider: provider,
+                apiKey: apiKey,
+                apiUrl: apiUrl
+            };
+            
+            localStorage.setItem('propeller_api_settings', JSON.stringify(settings));
+            closeApiSettings();
+            showNotification('API settings saved successfully! 🔑', 'success');
+            
+            // Update status to show API is configured
+            updateStatus(`Connected to ${provider.charAt(0).toUpperCase() + provider.slice(1)}`);
+        }
+
+        function getApiSettings() {
+            const saved = localStorage.getItem('propeller_api_settings');
+            return saved ? JSON.parse(saved) : { provider: 'openai', apiKey: '', apiUrl: '' };
+        }
+
+        // Notification System
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            const colors = {
+                success: 'bg-green-500',
+                error: 'bg-red-500',
+                info: 'bg-blue-500',
+                warning: 'bg-yellow-500'
+            };
+            
+            notification.className = `fixed top-4 right-4 ${colors[type]} text-white px-6 py-3 rounded-lg shadow-lg z-50 transform translate-x-full transition-transform duration-300`;
+            notification.textContent = message;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.classList.remove('translate-x-full');
+            }, 100);
+            
+            setTimeout(() => {
+                notification.classList.add('translate-x-full');
+                setTimeout(() => {
+                    document.body.removeChild(notification);
+                }, 300);
+            }, 3000);
+        }
+
+        // Scroll to bottom button
+        document.getElementById('scrollToBottom').addEventListener('click', scrollToBottom);
+
+        // File upload simulation
+        document.getElementById('fileUpload').addEventListener('click', () => {
+            showNotification('File upload feature coming soon! 📎', 'info');
+        });
+
+        // Voice input simulation
+        document.getElementById('voiceInput').addEventListener('click', () => {
+            showNotification('Voice input feature coming soon! 🎤', 'info');
+        });
+
+        document.getElementById('voiceToggle').addEventListener('click', () => {
+            showNotification('Voice features coming soon! 🎵', 'info');
+        });
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97dfb106f547a80a',t:'MTc1NzY4MzExNC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
