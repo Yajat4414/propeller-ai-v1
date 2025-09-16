@@ -275,7 +275,7 @@
                     <div class="w-20 h-20 bg-gradient-to-r from-purple-500 to-blue-500 rounded-full flex items-center justify-center mx-auto mb-6 shadow-2xl">
                         <i class="fas fa-robot text-white text-3xl"></i>
                     </div>
-                    <h1 class="text-4xl font-bold text-white mb-4">Hello There!</h1>
+                    <h1 class="text-4xl font-bold text-white mb-4">propeller</h1>
                     <p class="text-white/80 text-lg mb-8">I'm Propeller AI, your intelligent assistant. How can I help you today?</p>
                     
                     <!-- Quick Start Buttons -->
@@ -336,7 +336,7 @@
                         <div class="flex-1 relative">
                             <textarea 
                                 id="messageInput"
-                                placeholder="Type your message... (Shift+Enter for new line)" 
+                                placeholder="Messege Propeller " 
                                 class="w-full bg-transparent text-gray-800 placeholder-gray-500 text-lg outline-none resize-none resizable-textarea"
                                 rows="1"
                                 style="max-height: 120px;"
@@ -429,6 +429,259 @@
         let isTyping = false;
         let currentResponse = '';
         let isGenerating = false;
+
+// Add these variables to your existing JavaScript (at the top with other variables)
+let selectedImage = null;
+let selectedImageData = null;
+
+// Replace your existing file upload event listener with this enhanced version:
+document.getElementById('fileUpload').addEventListener('click', () => {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'image/*';
+    input.multiple = false;
+    
+    input.onchange = async (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            await handleImageUpload(file);
+        }
+    };
+    
+    input.click();
+});
+
+// Add this new function to handle image uploads
+async function handleImageUpload(file) {
+    // Validate file size (16MB limit)
+    const maxSize = 16 * 1024 * 1024;
+    if (file.size > maxSize) {
+        showNotification('Image too large. Maximum size is 16MB.', 'error');
+        return;
+    }
+    
+    // Validate file type
+    const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/bmp', 'image/webp'];
+    if (!allowedTypes.includes(file.type)) {
+        showNotification('Invalid file type. Please upload an image (JPG, PNG, GIF, BMP, WebP).', 'error');
+        return;
+    }
+    
+    try {
+        showNotification('Uploading image...', 'info');
+        
+        // Convert to base64
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            selectedImageData = e.target.result;
+            selectedImage = file;
+            displayImagePreview(selectedImageData, file.name);
+            showNotification('Image uploaded successfully! You can now ask questions about it.', 'success');
+        };
+        reader.readAsDataURL(file);
+        
+    } catch (error) {
+        console.error('Upload error:', error);
+        showNotification('Failed to upload image. Please try again.', 'error');
+    }
+}
+
+// Add this function to display image preview
+function displayImagePreview(imageSrc, filename) {
+    const inputArea = document.querySelector('.bg-white\\/90.backdrop-blur-sm.rounded-2xl.p-4.shadow-2xl');
+    
+    // Remove existing preview
+    const existingPreview = document.getElementById('imagePreview');
+    if (existingPreview) {
+        existingPreview.remove();
+    }
+    
+    // Create preview container
+    const previewContainer = document.createElement('div');
+    previewContainer.id = 'imagePreview';
+    previewContainer.className = 'mb-3 relative bg-gray-50 rounded-lg p-3 border-2 border-dashed border-gray-300';
+    
+    previewContainer.innerHTML = `
+        <div class="flex items-center space-x-3">
+            <img src="${imageSrc}" alt="Preview" class="w-16 h-16 object-cover rounded-lg">
+            <div class="flex-1">
+                <p class="text-sm font-medium text-gray-700">${filename}</p>
+                <p class="text-xs text-gray-500">Ready to analyze</p>
+            </div>
+            <button onclick="removeImagePreview()" class="p-1 text-gray-400 hover:text-red-500 transition-colors duration-300" title="Remove image">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+    `;
+    
+    inputArea.insertBefore(previewContainer, inputArea.firstChild);
+}
+
+// Add this function to remove image preview
+function removeImagePreview() {
+    selectedImage = null;
+    selectedImageData = null;
+    const preview = document.getElementById('imagePreview');
+    if (preview) {
+        preview.remove();
+    }
+    showNotification('Image removed', 'info');
+}
+
+// Update your existing callAPI function to handle images:
+async function callAPI(message) {
+    try {
+        const requestBody = {
+            message: message
+        };
+        
+        // Add image data if an image is selected
+        if (selectedImageData) {
+            requestBody.image = selectedImageData;
+        }
+        
+        const response = await fetch('/get', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(requestBody)
+        });
+        
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        
+        // Clear image after sending (optional - remove if you want to keep it)
+        if (selectedImageData) {
+            removeImagePreview();
+        }
+        
+        hideTypingIndicator();
+        displayTypingResponse(data.reply);
+        
+    } catch (error) {
+        hideTypingIndicator();
+        finishGeneration();
+        showNotification(`Error: ${error.message}`, 'error');
+        console.error('API Error:', error);
+        displayTypingResponse("I'm sorry, I'm having trouble processing your request right now. Please try again later.");
+    }
+}
+
+// Update your existing sendMessage function to handle image-only messages:
+function sendMessage() {
+    const input = document.getElementById('messageInput');
+    const message = input.value.trim();
+    
+    // Allow sending if there's either text or an image
+    if ((message || selectedImageData) && !isGenerating) {
+        let displayMessage = message;
+        
+        // If there's an image but no text, provide default text
+        if (!message && selectedImageData) {
+            displayMessage = "Please analyze this image.";
+        }
+        
+        // Add image indicator to display message if image is attached
+        if (selectedImageData) {
+            displayMessage = `📸 ${displayMessage}`;
+        }
+        
+        addMessage(displayMessage, true);
+        input.value = '';
+        input.style.height = 'auto';
+        updateCharCount();
+        
+        // Add to chat history
+        if (!chatHistory.find(chat => chat.id === currentChatId)) {
+            const chatItem = {
+                id: currentChatId,
+                title: (message || "Image analysis").substring(0, 30) + ((message || "Image analysis").length > 30 ? '...' : ''),
+                timestamp: new Date().toLocaleString(),
+                messageCount: 1
+            };
+            chatHistory.unshift(chatItem);
+            updateChatHistoryUI();
+        }
+        
+        // Show typing indicator and generate response
+        isGenerating = true;
+        document.getElementById('sendBtn').classList.add('hidden');
+        document.getElementById('stopBtn').classList.remove('hidden');
+        showTypingIndicator();
+        
+        // Call API with message and/or image
+        callAPI(message || "Please analyze this image.");
+    } else if (!message && !selectedImageData) {
+        showNotification('Please enter a message or upload an image', 'info');
+    }
+}
+
+// Add drag and drop functionality
+function setupDragAndDrop() {
+    const dropZone = document.querySelector('.bg-white\\/90.backdrop-blur-sm.rounded-2xl.p-4.shadow-2xl');
+    
+    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+        dropZone.addEventListener(eventName, preventDefaults, false);
+    });
+    
+    function preventDefaults(e) {
+        e.preventDefault();
+        e.stopPropagation();
+    }
+    
+    ['dragenter', 'dragover'].forEach(eventName => {
+        dropZone.addEventListener(eventName, highlight, false);
+    });
+    
+    ['dragleave', 'drop'].forEach(eventName => {
+        dropZone.addEventListener(eventName, unhighlight, false);
+    });
+    
+    function highlight(e) {
+        dropZone.style.backgroundColor = '#f3f4f6';
+        dropZone.style.borderColor = '#8b5cf6';
+    }
+    
+    function unhighlight(e) {
+        dropZone.style.backgroundColor = '';
+        dropZone.style.borderColor = '';
+    }
+    
+    dropZone.addEventListener('drop', handleDrop, false);
+    
+    function handleDrop(e) {
+        const dt = e.dataTransfer;
+        const files = dt.files;
+        
+        if (files.length > 0) {
+            const file = files[0];
+            if (file.type.startsWith('image/')) {
+                handleImageUpload(file);
+            } else {
+                showNotification('Please drop an image file', 'error');
+            }
+        }
+    }
+}
+
+// Add this to your existing setupEventListeners function:
+// (Add this line inside the setupEventListeners function)
+setupDragAndDrop();
+
+// Update the file upload button tooltip
+document.getElementById('fileUpload').title = 'Upload Image (JPG, PNG, GIF, BMP, WebP)';
+
+// Add keyboard shortcut for image upload (Ctrl+I)
+document.addEventListener('keydown', (e) => {
+    if (e.ctrlKey && e.key === 'i') {
+        e.preventDefault();
+        document.getElementById('fileUpload').click();
+    }
+});
 
         // Initialize
         document.addEventListener('DOMContentLoaded', function() {

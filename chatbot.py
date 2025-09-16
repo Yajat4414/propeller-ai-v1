@@ -1,7 +1,7 @@
 import requests
 
 API_URL = "https://openrouter.ai/api/v1/chat/completions"
-API_KEY = "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"
+API_KEY = "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"
 
 def ask_model(user_input, model="anthropic/claude-opus-4.1"):
     headers = {
@@ -12,11 +12,11 @@ def ask_model(user_input, model="anthropic/claude-opus-4.1"):
     data = {
         "model": model,
         "messages": [
-            {"role": "system", "content": "You are a helpful AI chatbot."},
+            {"role": "system", "content": "You are a helpful ai assistant and your name is Propeller AI. You are built for the purpose of helping users with their questions."},
             {"role": "user", "content": user_input}
         ],
         "max_tokens": 500
-    }
+    }                 
 
     response = requests.post(API_URL, headers=headers, json=data)
     response.raise_for_status()
