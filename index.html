@@ -1,0 +1,2043 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Propeller - Login</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;500;600&display=swap');
+        
+        .propeller-font {
+            font-family: 'Orbitron', monospace;
+        }
+        
+        .form-transition {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .slide-in {
+            animation: slideIn 0.5s ease-out;
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .propeller-gradient {
+            background: #6b7280;
+        }
+        
+        .bg-pattern {
+            background: none;
+        }
+        
+        .input-focus:focus {
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+    </style>
+</head>
+<body class="font-['Inter'] min-h-screen bg-pattern" style="background-color: #1f1f21;">
+    <div class="min-h-screen flex items-center justify-center p-4">
+        <div class="w-full max-w-md">
+            <!-- Logo and Title -->
+            <div class="text-center mb-8 slide-in">
+                <div class="w-16 h-16 propeller-gradient rounded-2xl flex items-center justify-center shadow-2xl mx-auto mb-4">
+                    <img src="assets/images/logo.png" alt="Propeller Logo" class="w-12 h-12 rounded-xl object-cover" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                    <div class="w-12 h-12 bg-white rounded-xl flex items-center justify-center text-gray-800 font-bold text-xl" style="display: none;">P</div>
+                </div>
+                <h1 class="propeller-font text-4xl font-black text-white mb-2">
+                    propeller
+                </h1>
+                <p class="text-gray-400">Your intelligent AI assistant</p>
+            </div>
+
+            <!-- Auth Form Container -->
+            <div class="rounded-2xl shadow-2xl border overflow-hidden slide-in" style="background-color: #2a2a2c; border-color: #444;">
+                <!-- Tab Headers -->
+                <div class="flex">
+                    <button id="loginTab" class="flex-1 py-4 px-6 text-center font-medium transition-all duration-200 bg-gray-700 text-white">
+                        Login
+                    </button>
+                    <button id="signupTab" class="flex-1 py-4 px-6 text-center font-medium transition-all duration-200 text-gray-300 hover:bg-gray-600" style="background-color: #1a1a1c;">
+                        Sign Up
+                    </button>
+                </div>
+
+                <!-- Forms Container -->
+                <div class="p-8">
+                    <!-- Login Form -->
+                    <form id="loginForm" class="space-y-6">
+                        <div>
+                            <label for="loginEmail" class="block text-sm font-medium text-gray-300 mb-2">Email</label>
+                            <input 
+                                type="email" 
+                                id="loginEmail" 
+                                name="email"
+                                required
+                                class="w-full px-4 py-3 border rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent input-focus transition-all duration-200"
+                                style="background-color: #1a1a1c; border-color: #444;"
+                                placeholder="Enter your email"
+                            >
+                        </div>
+                        
+                        <div>
+                            <label for="loginPassword" class="block text-sm font-medium text-gray-300 mb-2">Password</label>
+                            <div class="relative">
+                                <input 
+                                    type="password" 
+                                    id="loginPassword" 
+                                    name="password"
+                                    required
+                                    class="w-full px-4 py-3 border rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent input-focus transition-all duration-200"
+                                    style="background-color: #1a1a1c; border-color: #444;"
+                                    placeholder="Enter your password"
+                                >
+                                <button type="button" id="toggleLoginPassword" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-300">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center justify-between">
+                            <label class="flex items-center">
+                                <input type="checkbox" class="w-4 h-4 text-indigo-600 rounded focus:ring-indigo-500" style="background-color: #1a1a1c; border-color: #444;">
+                                <span class="ml-2 text-sm text-gray-300">Remember me</span>
+                            </label>
+                            <a href="#" class="text-sm text-indigo-400 hover:text-indigo-300 transition-colors">Forgot password?</a>
+                        </div>
+
+                        <button 
+                            type="submit" 
+                            class="w-full bg-gray-700 text-white py-3 px-4 rounded-xl font-medium hover:bg-gray-600 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
+                        >
+                            Sign In
+                        </button>
+                    </form>
+
+                    <!-- Signup Form (Hidden Initially) -->
+                    <form id="signupForm" class="space-y-6 hidden">
+                        <div>
+                            <label for="signupName" class="block text-sm font-medium text-gray-300 mb-2">Full Name</label>
+                            <input 
+                                type="text" 
+                                id="signupName" 
+                                name="name"
+                                required
+                                class="w-full px-4 py-3 border rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent input-focus transition-all duration-200"
+                                style="background-color: #1a1a1c; border-color: #444;"
+                                placeholder="Enter your full name"
+                            >
+                        </div>
+
+                        <div>
+                            <label for="signupEmail" class="block text-sm font-medium text-gray-300 mb-2">Email</label>
+                            <input 
+                                type="email" 
+                                id="signupEmail" 
+                                name="email"
+                                required
+                                class="w-full px-4 py-3 border rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent input-focus transition-all duration-200"
+                                style="background-color: #1a1a1c; border-color: #444;"
+                                placeholder="Enter your email"
+                            >
+                        </div>
+                        
+                        <div>
+                            <label for="signupPassword" class="block text-sm font-medium text-gray-300 mb-2">Password</label>
+                            <div class="relative">
+                                <input 
+                                    type="password" 
+                                    id="signupPassword" 
+                                    name="password"
+                                    required
+                                    minlength="8"
+                                    class="w-full px-4 py-3 border rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent input-focus transition-all duration-200"
+                                    style="background-color: #1a1a1c; border-color: #444;"
+                                    placeholder="Create a password (min 8 characters)"
+                                >
+                                <button type="button" id="toggleSignupPassword" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-300">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label for="confirmPassword" class="block text-sm font-medium text-gray-300 mb-2">Confirm Password</label>
+                            <input 
+                                type="password" 
+                                id="confirmPassword" 
+                                name="confirmPassword"
+                                required
+                                class="w-full px-4 py-3 border rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent input-focus transition-all duration-200"
+                                style="background-color: #1a1a1c; border-color: #444;"
+                                placeholder="Confirm your password"
+                            >
+                        </div>
+
+                        <div class="flex items-center">
+                            <input type="checkbox" id="agreeTerms" required class="w-4 h-4 text-indigo-600 rounded focus:ring-indigo-500" style="background-color: #1a1a1c; border-color: #444;">
+                            <label for="agreeTerms" class="ml-2 text-sm text-gray-300">
+                                I agree to the <a href="#" class="text-indigo-400 hover:text-indigo-300">Terms of Service</a> and <a href="#" class="text-indigo-400 hover:text-indigo-300">Privacy Policy</a>
+                            </label>
+                        </div>
+
+                        <button 
+                            type="submit" 
+                            class="w-full bg-gray-700 text-white py-3 px-4 rounded-xl font-medium hover:bg-gray-600 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
+                        >
+                            Create Account
+                        </button>
+                    </form>
+
+
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="text-center mt-8 text-gray-400 text-sm">
+                <p>&copy; 2024 Propeller. All rights reserved.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Tab switching
+        const loginTab = document.getElementById('loginTab');
+        const signupTab = document.getElementById('signupTab');
+        const loginForm = document.getElementById('loginForm');
+        const signupForm = document.getElementById('signupForm');
+
+        loginTab.addEventListener('click', () => {
+            loginTab.className = 'flex-1 py-4 px-6 text-center font-medium transition-all duration-200 bg-gray-700 text-white';
+            signupTab.className = 'flex-1 py-4 px-6 text-center font-medium transition-all duration-200 text-gray-300 hover:bg-gray-600';
+            signupTab.style.backgroundColor = '#1a1a1c';
+            loginForm.classList.remove('hidden');
+            signupForm.classList.add('hidden');
+        });
+
+        signupTab.addEventListener('click', () => {
+            signupTab.className = 'flex-1 py-4 px-6 text-center font-medium transition-all duration-200 bg-gray-700 text-white';
+            loginTab.className = 'flex-1 py-4 px-6 text-center font-medium transition-all duration-200 text-gray-300 hover:bg-gray-600';
+            loginTab.style.backgroundColor = '#1a1a1c';
+            signupForm.classList.remove('hidden');
+            loginForm.classList.add('hidden');
+        });
+
+        // Password visibility toggle
+        document.getElementById('toggleLoginPassword').addEventListener('click', function() {
+            const password = document.getElementById('loginPassword');
+            const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+            password.setAttribute('type', type);
+        });
+
+        document.getElementById('toggleSignupPassword').addEventListener('click', function() {
+            const password = document.getElementById('signupPassword');
+            const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+            password.setAttribute('type', type);
+        });
+
+        // Simple login system using localStorage
+        function showMessage(message, isError = false) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `fixed top-4 right-4 px-6 py-3 rounded-lg text-white font-medium z-50 ${
+                isError ? 'bg-red-600' : 'bg-green-600'
+            }`;
+            messageDiv.textContent = message;
+            document.body.appendChild(messageDiv);
+            
+            setTimeout(() => {
+                messageDiv.remove();
+            }, 3000);
+        }
+
+        // Form validation and submission
+        loginForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const email = formData.get('email');
+            const password = formData.get('password');
+            
+            // Get stored users from localStorage
+            const users = JSON.parse(localStorage.getItem('propellerUsers') || '[]');
+            
+            // Find user with matching email and password
+            const user = users.find(u => u.email === email && u.password === password);
+            
+            if (user) {
+                // Store current user session
+                localStorage.setItem('propellerCurrentUser', JSON.stringify(user));
+                showMessage('Login successful! Redirecting...');
+                
+                // Redirect to chatbot
+                setTimeout(() => {
+                    // Replace the entire page with the chatbot
+                    document.body.innerHTML = getChatbotHTML();
+                    initializeChatbot();
+                }, 1500);
+            } else {
+                showMessage('Invalid email or password!', true);
+            }
+        });
+
+        signupForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const name = formData.get('name');
+            const email = formData.get('email');
+            const password = formData.get('password');
+            const confirmPassword = formData.get('confirmPassword');
+            
+            // Validation
+            if (password !== confirmPassword) {
+                showMessage('Passwords do not match!', true);
+                return;
+            }
+            
+            if (password.length < 8) {
+                showMessage('Password must be at least 8 characters long!', true);
+                return;
+            }
+            
+            // Get existing users
+            const users = JSON.parse(localStorage.getItem('propellerUsers') || '[]');
+            
+            // Check if email already exists
+            if (users.find(u => u.email === email)) {
+                showMessage('Email already registered!', true);
+                return;
+            }
+            
+            // Create new user
+            const newUser = {
+                id: Date.now(),
+                name: name,
+                email: email,
+                password: password,
+                createdAt: new Date().toISOString()
+            };
+            
+            // Add to users array and save
+            users.push(newUser);
+            localStorage.setItem('propellerUsers', JSON.stringify(users));
+            
+            // Store current user session immediately after signup
+            localStorage.setItem('propellerCurrentUser', JSON.stringify(newUser));
+            showMessage('Account created successfully! Redirecting...');
+            
+            // Redirect directly to chatbot
+            setTimeout(() => {
+                document.body.innerHTML = getChatbotHTML();
+                initializeChatbot();
+            }, 1500);
+        });
+
+        // Focus first input on load
+        document.getElementById('loginEmail').focus();
+
+        // Chatbot HTML template
+        function getChatbotHTML() {
+            return `
+            <div class="font-['Inter'] h-screen overflow-hidden" style="background-color: #1f1f21;">
+                <div class="flex h-full">
+                    <!-- Sidebar -->
+                    <div id="sidebar" class="sidebar-transition shadow-xl border-r flex flex-col" style="width: 280px; background-color: #050505; border-color: #333;">
+                        <!-- Sidebar Header -->
+                        <div class="p-4 border-b" style="border-color: #333;">
+                            <div class="flex items-center space-x-3">
+                                <!-- Custom Logo -->
+                                <div class="w-10 h-10 propeller-gradient rounded-xl flex items-center justify-center shadow-lg">
+                                    <img src="assets/images/logo.png" alt="Propeller Logo" class="w-8 h-8 rounded-lg object-cover" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                                    <div class="w-8 h-8 bg-white rounded-lg flex items-center justify-center text-gray-800 font-bold text-sm" style="display: none;">P</div>
+                                </div>
+                                <div id="sidebarTitle" class="propeller-font font-bold text-xl text-white">
+                                    Propeller
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- New Chat Button -->
+                        <div class="p-3">
+                            <button id="newChatBtn" class="w-full bg-gray-700 text-white py-2 px-3 rounded-lg font-medium hover:bg-gray-600 transition-colors flex items-center justify-center space-x-2 mb-2">
+                                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+                                </svg>
+                                <span id="newChatText">New Chat</span>
+                            </button>
+                            
+                            <!-- Toggle Sidebar Button -->
+                            <button id="toggleSidebar" class="w-full p-2 hover:bg-gray-700 rounded-lg transition-colors flex items-center justify-center space-x-2">
+                                <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 19l-7-7 7-7m8 14l-7-7 7-7"/>
+                                </svg>
+                                <span id="toggleText" class="text-xs text-gray-400">Minimize</span>
+                            </button>
+                        </div>
+                        
+                        <!-- Chat History -->
+                        <div class="flex-1 overflow-y-auto scrollbar-hide px-3 pb-3">
+                            <div class="space-y-1">
+                                <div class="text-xs font-medium text-gray-400 uppercase tracking-wider mb-2" id="historyTitle">Recent Chats</div>
+                                <div id="chatHistoryList" class="space-y-1">
+                                    <!-- Chat history items will be populated here -->
+                                </div>
+                                <div id="noChatHistory" class="text-center py-6 text-gray-500 text-sm hidden">
+                                    No chat history yet.<br>Start a conversation!
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- User Info (Moved to bottom) -->
+                        <div id="userInfoSection" class="p-3 border-t relative" style="border-color: #333;">
+                            <button id="settingsBtn" class="w-full flex items-center justify-between hover:bg-gray-700 rounded-lg p-2 transition-colors settings-btn-hover">
+                                <div class="flex items-center space-x-2">
+                                    <div class="w-6 h-6 bg-gray-600 rounded-full flex items-center justify-center">
+                                        <span class="text-white text-xs font-medium" id="userInitial">U</span>
+                                    </div>
+                                    <div class="text-xs font-medium text-white" id="userName">User</div>
+                                </div>
+                                <svg id="settingsArrow" class="w-3 h-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"/>
+                                </svg>
+                            </button>
+                            <!-- Settings Dropdown (Hidden by default) -->
+                            <div id="settingsDropdown" class="hidden absolute bottom-16 left-4 rounded-lg shadow-lg border z-50 min-w-48" style="background-color: #1a1a1c; border-color: #444;">
+                                <button id="settingsOption" class="w-full p-3 text-left hover:bg-gray-600 rounded-t-lg transition-colors flex items-center space-x-2">
+                                    <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                    </svg>
+                                    <span class="text-sm text-gray-300">Settings</span>
+                                </button>
+                                <button id="languageOption" class="w-full p-3 text-left hover:bg-gray-600 transition-colors flex items-center space-x-2">
+                                    <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129"/>
+                                    </svg>
+                                    <span class="text-sm text-gray-300">Language</span>
+                                </button>
+                                <button id="logoutBtn" class="w-full p-3 text-left hover:bg-red-600 rounded-b-lg transition-colors flex items-center space-x-2">
+                                    <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+                                    </svg>
+                                    <span class="text-sm text-gray-300">Logout</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Main Chat Area -->
+                    <div class="flex-1 flex flex-col relative" style="background-color: #1f1f21;">
+                        <!-- Chat Messages Container -->
+                        <div id="chatContainer" class="flex-1 flex flex-col overflow-hidden">
+                            <!-- Initial State - Clean -->
+                            <div id="initialState" class="text-center hidden">
+                            </div>
+                            
+                            <!-- Chat Messages (Hidden Initially) -->
+                            <div id="messagesContainer" class="hidden w-full flex-1 overflow-y-auto scrollbar-hide">
+                                <div id="messagesList" class="space-y-4 p-4 w-full max-w-4xl mx-auto">
+                                    <!-- Messages will be added here -->
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Input Area - Centered when no messages -->
+                        <div id="inputArea" class="absolute inset-0 flex flex-col items-center justify-center p-6 chat-transition">
+                            <!-- Welcome Message - Positioned above input -->
+                            <div id="welcomeMessageContainer" class="mb-12">
+                                <h1 id="welcomeMessage" class="propeller-font text-gray-100 text-5xl font-black text-center bg-gradient-to-r from-indigo-400 via-purple-400 to-indigo-400 bg-clip-text text-transparent tracking-wide">Hi there!</h1>
+                            </div>
+                            
+                            <!-- File Preview Area -->
+                            <div id="filePreviewArea" class="hidden max-w-2xl w-full mb-4">
+                                <div class="border rounded-xl p-4" style="background-color: #2a2a2c; border-color: #444;">
+                                    <div class="flex items-center justify-between mb-2">
+                                        <span class="text-sm text-gray-300 font-medium">Attached Files</span>
+                                        <button id="clearFiles" class="text-gray-400 hover:text-red-400 transition-colors">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                    <div id="fileList" class="space-y-2">
+                                        <!-- File previews will be added here -->
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="max-w-2xl w-full">
+                                <!-- AI Settings Dropdown -->
+                                <div id="aiSettingsDropdown" class="hidden absolute bottom-20 left-0 border rounded-xl shadow-xl p-4 min-w-64 z-10" style="background-color: #2a2a2c; border-color: #444;">
+                                    <div class="space-y-4">
+                                        <div class="text-sm font-medium text-gray-200 mb-3">AI Modes</div>
+                                        
+                                        <!-- Deep Thinking Toggle -->
+                                        <div class="flex items-center justify-between">
+                                            <div class="flex items-center space-x-3">
+                                                <div class="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center">
+                                                    <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
+                                                    </svg>
+                                                </div>
+                                                <div>
+                                                    <div class="text-sm font-medium text-gray-200">Deep Thinking</div>
+                                                    <div class="text-xs text-gray-400">Enhanced reasoning and analysis</div>
+                                                </div>
+                                            </div>
+                                            <button id="deepThinkingToggle" class="relative inline-flex h-6 w-11 items-center rounded-full bg-gray-600 transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                                                <span class="inline-block h-4 w-4 transform rounded-full bg-white transition-transform translate-x-1"></span>
+                                            </button>
+                                        </div>
+                                        
+                                        <!-- Study & Learn Toggle -->
+                                        <div class="flex items-center justify-between">
+                                            <div class="flex items-center space-x-3">
+                                                <div class="w-8 h-8 bg-green-600 rounded-lg flex items-center justify-center">
+                                                    <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+                                                    </svg>
+                                                </div>
+                                                <div>
+                                                    <div class="text-sm font-medium text-gray-200">Study & Learn</div>
+                                                    <div class="text-xs text-gray-400">Educational and learning mode</div>
+                                                </div>
+                                            </div>
+                                            <button id="studyLearnToggle" class="relative inline-flex h-6 w-11 items-center rounded-full bg-gray-600 transition-colors focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2">
+                                                <span class="inline-block h-4 w-4 transform rounded-full bg-white transition-transform translate-x-1"></span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Text Input Container -->
+                                <div class="relative border rounded-2xl shadow-lg" style="background-color: #2a2a2c; border-color: #444;">
+                                    <!-- Text Input Area -->
+                                    <textarea 
+                                        id="messageInput" 
+                                        placeholder="Ask propeller anything..." 
+                                        rows="1"
+                                        class="w-full py-4 px-4 pb-14 border-0 rounded-2xl focus:outline-none text-white placeholder-gray-400 resize-none bg-transparent"
+                                        style="min-height: 56px; max-height: 160px;"
+                                    ></textarea>
+                                    
+                                    <!-- Action Buttons Row - Inside Input Area -->
+                                    <div class="absolute bottom-3 left-3 right-3 flex items-center justify-between">
+                                        <div class="flex items-center space-x-2">
+                                            <!-- File Upload Button -->
+                                            <button 
+                                                id="fileUploadBtn" 
+                                                class="w-9 h-9 text-gray-400 hover:text-indigo-400 hover:bg-gray-700 rounded-lg transition-all duration-200 flex items-center justify-center"
+                                                title="Attach files"
+                                            >
+                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v12m6-6H6"/>
+                                                </svg>
+                                            </button>
+                                            
+                                            <!-- AI Settings Button -->
+                                            <button 
+                                                id="aiSettingsBtn" 
+                                                class="w-9 h-9 text-gray-400 hover:text-purple-400 hover:bg-gray-700 rounded-lg transition-all duration-200 flex items-center justify-center"
+                                                title="AI settings"
+                                            >
+                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8h16M4 16h16"/>
+                                                    <circle cx="6" cy="8" r="1.5" fill="currentColor"/>
+                                                    <circle cx="18" cy="16" r="1.5" fill="currentColor"/>
+                                                </svg>
+                                            </button>
+                                            
+                                            <!-- Hidden File Input -->
+                                            <input 
+                                                type="file" 
+                                                id="fileInput" 
+                                                multiple 
+                                                accept="image/*,.pdf,.doc,.docx,.txt,.csv,.xlsx,.ppt,.pptx"
+                                                class="hidden"
+                                            >
+                                        </div>
+                                        
+                                        <!-- Send Button -->
+                                        <button 
+                                            id="sendBtn" 
+                                            class="w-10 h-10 bg-gray-700 text-white rounded-lg hover:bg-gray-600 transition-all duration-200 flex items-center justify-center shadow-lg hover:shadow-xl transform hover:scale-105"
+                                            title="Send message"
+                                        >
+                                            <span class="text-lg font-bold">↑</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            `;
+        }
+
+        // Initialize chatbot functionality
+        function initializeChatbot() {
+            // Add required styles
+            const style = document.createElement('style');
+            style.textContent = `
+                .chat-transition {
+                    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                }
+                
+                .sidebar-transition {
+                    transition: width 0.3s ease-in-out;
+                }
+                
+                .message-fade-in {
+                    animation: fadeInUp 0.4s ease-out;
+                }
+                
+                @keyframes fadeInUp {
+                    from {
+                        opacity: 0;
+                        transform: translateY(20px);
+                    }
+                    to {
+                        opacity: 1;
+                        transform: translateY(0);
+                    }
+                }
+                
+                .chat-bubble {
+                    max-width: 80%;
+                    word-wrap: break-word;
+                }
+                
+                .scrollbar-hide {
+                    -ms-overflow-style: none;
+                    scrollbar-width: none;
+                }
+                
+                .scrollbar-hide::-webkit-scrollbar {
+                    display: none;
+                }
+                
+                .sidebar-collapsed .settings-btn-hover:hover {
+                    border-radius: 0.5rem;
+                    width: 64px;
+                    height: 64px;
+                    margin: 0 auto;
+                }
+            `;
+            document.head.appendChild(style);
+
+            // Get current user and display info
+            const currentUser = JSON.parse(localStorage.getItem('propellerCurrentUser'));
+            if (currentUser) {
+                document.getElementById('userName').textContent = currentUser.name;
+                document.getElementById('userInitial').textContent = currentUser.name.charAt(0).toUpperCase();
+                document.getElementById('welcomeMessage').textContent = `Hi there, ${currentUser.name}!`;
+            }
+
+            let isCollapsed = false;
+            let hasMessages = false;
+            let attachedFiles = [];
+            let currentChatId = null;
+            let chatHistory = JSON.parse(localStorage.getItem('propellerChatHistory') || '[]');
+            
+            const sidebar = document.getElementById('sidebar');
+            const toggleBtn = document.getElementById('toggleSidebar');
+            const sidebarTitle = document.getElementById('sidebarTitle');
+            const newChatText = document.getElementById('newChatText');
+            const toggleText = document.getElementById('toggleText');
+            const messageInput = document.getElementById('messageInput');
+            const sendBtn = document.getElementById('sendBtn');
+            const initialState = document.getElementById('initialState');
+            const messagesContainer = document.getElementById('messagesContainer');
+            const messagesList = document.getElementById('messagesList');
+            const inputArea = document.getElementById('inputArea');
+            const chatContainer = document.getElementById('chatContainer');
+            const newChatBtn = document.getElementById('newChatBtn');
+            const settingsBtn = document.getElementById('settingsBtn');
+            const settingsDropdown = document.getElementById('settingsDropdown');
+            const logoutBtn = document.getElementById('logoutBtn');
+            const fileUploadBtn = document.getElementById('fileUploadBtn');
+            const fileInput = document.getElementById('fileInput');
+            const filePreviewArea = document.getElementById('filePreviewArea');
+            const fileList = document.getElementById('fileList');
+            const clearFiles = document.getElementById('clearFiles');
+            const aiSettingsBtn = document.getElementById('aiSettingsBtn');
+            const aiSettingsDropdown = document.getElementById('aiSettingsDropdown');
+            const deepThinkingToggle = document.getElementById('deepThinkingToggle');
+            const studyLearnToggle = document.getElementById('studyLearnToggle');
+            
+            // AI Settings state
+            let aiSettings = {
+                deepThinking: false,
+                studyLearn: false
+            };
+            
+            // AI Settings functionality
+            aiSettingsBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                aiSettingsDropdown.classList.toggle('hidden');
+            });
+            
+            // Toggle functions
+            function toggleDeepThinking() {
+                aiSettings.deepThinking = !aiSettings.deepThinking;
+                updateToggleUI(deepThinkingToggle, aiSettings.deepThinking, 'indigo');
+                showMessage(`Deep Thinking ${aiSettings.deepThinking ? 'enabled' : 'disabled'}!`);
+            }
+            
+            function toggleStudyLearn() {
+                aiSettings.studyLearn = !aiSettings.studyLearn;
+                updateToggleUI(studyLearnToggle, aiSettings.studyLearn, 'green');
+                showMessage(`Study & Learn mode ${aiSettings.studyLearn ? 'enabled' : 'disabled'}!`);
+            }
+            
+            function updateToggleUI(toggle, isEnabled, color) {
+                const span = toggle.querySelector('span');
+                if (isEnabled) {
+                    toggle.className = toggle.className.replace('bg-gray-600', `bg-${color}-600`);
+                    span.className = span.className.replace('translate-x-1', 'translate-x-6');
+                } else {
+                    toggle.className = toggle.className.replace(`bg-${color}-600`, 'bg-gray-600');
+                    span.className = span.className.replace('translate-x-6', 'translate-x-1');
+                }
+            }
+            
+            deepThinkingToggle.addEventListener('click', toggleDeepThinking);
+            studyLearnToggle.addEventListener('click', toggleStudyLearn);
+            
+            // Close AI settings dropdown when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!aiSettingsDropdown.contains(e.target) && !aiSettingsBtn.contains(e.target)) {
+                    aiSettingsDropdown.classList.add('hidden');
+                }
+            });
+            
+            // File upload functionality
+            fileUploadBtn.addEventListener('click', () => {
+                fileInput.click();
+            });
+            
+            fileInput.addEventListener('change', (e) => {
+                const files = Array.from(e.target.files);
+                files.forEach(file => {
+                    if (file.size > 10 * 1024 * 1024) { // 10MB limit
+                        showMessage(`File "${file.name}" is too large. Maximum size is 10MB.`, true);
+                        return;
+                    }
+                    attachedFiles.push(file);
+                });
+                updateFilePreview();
+                e.target.value = ''; // Reset input
+            });
+            
+            clearFiles.addEventListener('click', () => {
+                attachedFiles = [];
+                updateFilePreview();
+            });
+            
+            // Settings dropdown functionality
+            settingsBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                settingsDropdown.classList.toggle('hidden');
+            });
+            
+            // Settings option functionality
+            document.getElementById('settingsOption').addEventListener('click', () => {
+                showSettingsPage();
+                settingsDropdown.classList.add('hidden');
+            });
+            
+            // Language option functionality
+            document.getElementById('languageOption').addEventListener('click', () => {
+                showMessage('Language selection coming soon!');
+                settingsDropdown.classList.add('hidden');
+            });
+            
+            // Close dropdown when clicking outside
+            document.addEventListener('click', () => {
+                settingsDropdown.classList.add('hidden');
+                // Close all chat menu dropdowns
+                document.querySelectorAll('.chat-menu-dropdown').forEach(dropdown => {
+                    dropdown.classList.add('hidden');
+                });
+            });
+            
+            // Toggle sidebar
+            toggleBtn.addEventListener('click', () => {
+                isCollapsed = !isCollapsed;
+                
+                if (isCollapsed) {
+                    sidebar.style.width = '80px';
+                    sidebar.classList.add('sidebar-collapsed');
+                    sidebarTitle.style.display = 'none';
+                    newChatText.style.display = 'none';
+                    toggleText.style.display = 'none';
+                    document.querySelector('.flex-1.overflow-y-auto').style.display = 'none';
+                    document.getElementById('historyTitle').style.display = 'none';
+                    document.getElementById('userName').style.display = 'none';
+                    document.getElementById('settingsArrow').style.display = 'none';
+                    // Keep user info section at bottom but hide text and adjust dropdown position
+                    const userInfoSection = document.getElementById('userInfoSection');
+                    const settingsDropdown = document.getElementById('settingsDropdown');
+                    userInfoSection.style.position = 'absolute';
+                    userInfoSection.style.bottom = '0';
+                    userInfoSection.style.left = '0';
+                    userInfoSection.style.right = '0';
+                    // Adjust dropdown position for collapsed state
+                    settingsDropdown.className = settingsDropdown.className.replace('left-4', 'left-16');
+                    toggleBtn.innerHTML = '<svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5l7 7-7 7M5 5l7 7-7 7"/></svg>';
+                } else {
+                    sidebar.style.width = '280px';
+                    sidebar.classList.remove('sidebar-collapsed');
+                    // Reset user info section position
+                    const userInfoSection = document.getElementById('userInfoSection');
+                    const settingsDropdown = document.getElementById('settingsDropdown');
+                    userInfoSection.style.position = 'relative';
+                    userInfoSection.style.bottom = 'auto';
+                    userInfoSection.style.left = 'auto';
+                    userInfoSection.style.right = 'auto';
+                    // Reset dropdown position for expanded state
+                    settingsDropdown.className = settingsDropdown.className.replace('left-16', 'left-4');
+                    setTimeout(() => {
+                        sidebarTitle.style.display = 'block';
+                        newChatText.style.display = 'inline';
+                        toggleText.style.display = 'inline';
+                        document.querySelector('.flex-1.overflow-y-auto').style.display = 'block';
+                        document.getElementById('historyTitle').style.display = 'block';
+                        document.getElementById('userName').style.display = 'block';
+                        document.getElementById('settingsArrow').style.display = 'block';
+                    }, 150);
+                    toggleBtn.innerHTML = '<svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 19l-7-7 7-7m8 14l-7-7 7-7"/></svg>';
+                }
+            });
+            
+            // Logout functionality
+            logoutBtn.addEventListener('click', () => {
+                localStorage.removeItem('propellerCurrentUser');
+                location.reload(); // Reload to show login page again
+            });
+            
+            // Update file preview
+            function updateFilePreview() {
+                if (attachedFiles.length === 0) {
+                    filePreviewArea.classList.add('hidden');
+                    return;
+                }
+                
+                filePreviewArea.classList.remove('hidden');
+                fileList.innerHTML = '';
+                
+                attachedFiles.forEach((file, index) => {
+                    const fileItem = document.createElement('div');
+                    fileItem.className = 'flex items-center justify-between rounded-lg p-3';
+                    fileItem.style.backgroundColor = '#1a1a1c';
+                    
+                    const fileInfo = document.createElement('div');
+                    fileInfo.className = 'flex items-center space-x-3';
+                    
+                    const fileIcon = getFileIcon(file.type);
+                    const fileName = document.createElement('span');
+                    fileName.className = 'text-sm text-gray-200 truncate max-w-xs';
+                    fileName.textContent = file.name;
+                    
+                    const fileSize = document.createElement('span');
+                    fileSize.className = 'text-xs text-gray-400';
+                    fileSize.textContent = formatFileSize(file.size);
+                    
+                    fileInfo.appendChild(fileIcon);
+                    fileInfo.appendChild(fileName);
+                    fileInfo.appendChild(fileSize);
+                    
+                    const removeBtn = document.createElement('button');
+                    removeBtn.className = 'text-gray-400 hover:text-red-400 transition-colors';
+                    removeBtn.innerHTML = '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>';
+                    removeBtn.addEventListener('click', () => {
+                        attachedFiles.splice(index, 1);
+                        updateFilePreview();
+                    });
+                    
+                    fileItem.appendChild(fileInfo);
+                    fileItem.appendChild(removeBtn);
+                    fileList.appendChild(fileItem);
+                });
+            }
+            
+            // Get file icon based on type
+            function getFileIcon(fileType) {
+                const icon = document.createElement('div');
+                icon.className = 'w-8 h-8 rounded-lg flex items-center justify-center text-white text-xs font-medium';
+                
+                if (fileType.startsWith('image/')) {
+                    icon.className += ' bg-green-600';
+                    icon.innerHTML = '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>';
+                } else if (fileType.includes('pdf')) {
+                    icon.className += ' bg-red-600';
+                    icon.textContent = 'PDF';
+                } else if (fileType.includes('word') || fileType.includes('document')) {
+                    icon.className += ' bg-indigo-600';
+                    icon.textContent = 'DOC';
+                } else if (fileType.includes('sheet') || fileType.includes('excel')) {
+                    icon.className += ' bg-green-600';
+                    icon.textContent = 'XLS';
+                } else if (fileType.includes('presentation') || fileType.includes('powerpoint')) {
+                    icon.className += ' bg-orange-600';
+                    icon.textContent = 'PPT';
+                } else {
+                    icon.className += ' bg-gray-600';
+                    icon.innerHTML = '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>';
+                }
+                
+                return icon;
+            }
+            
+            // Format file size
+            function formatFileSize(bytes) {
+                if (bytes === 0) return '0 Bytes';
+                const k = 1024;
+                const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+                const i = Math.floor(Math.log(bytes) / Math.log(k));
+                return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+            }
+            
+            // Chat history functions
+            function saveChatHistory() {
+                localStorage.setItem('propellerChatHistory', JSON.stringify(chatHistory));
+            }
+            
+            function createNewChat() {
+                const chatId = Date.now().toString();
+                const newChat = {
+                    id: chatId,
+                    title: 'New Chat',
+                    messages: [],
+                    createdAt: new Date().toISOString(),
+                    updatedAt: new Date().toISOString()
+                };
+                
+                chatHistory.unshift(newChat);
+                currentChatId = chatId;
+                saveChatHistory();
+                updateChatHistoryUI();
+                return newChat;
+            }
+            
+            function updateChatTitle(chatId, firstMessage) {
+                const chat = chatHistory.find(c => c.id === chatId);
+                if (chat && chat.title === 'New Chat') {
+                    // Generate title from first message (max 30 chars)
+                    chat.title = firstMessage.length > 30 ? firstMessage.substring(0, 30) + '...' : firstMessage;
+                    chat.updatedAt = new Date().toISOString();
+                    saveChatHistory();
+                    updateChatHistoryUI();
+                }
+            }
+            
+            function loadChat(chatId) {
+                const chat = chatHistory.find(c => c.id === chatId);
+                if (!chat) return;
+                
+                currentChatId = chatId;
+                
+                // Clear current messages
+                messagesList.innerHTML = '';
+                
+                if (chat.messages.length === 0) {
+                    // Empty chat - show welcome state
+                    hasMessages = false;
+                    messagesContainer.classList.add('hidden');
+                    document.getElementById('welcomeMessageContainer').classList.remove('hidden');
+                    inputArea.className = 'p-6 border-t chat-transition';
+                    inputArea.style.borderColor = '#333';
+                    inputArea.style.flexShrink = '0';
+                    const inputContainer = inputArea.querySelector('div');
+                    inputContainer.classList.remove('max-w-4xl');
+                    inputContainer.classList.add('max-w-2xl');
+                } else {
+                    // Load existing messages
+                    hasMessages = true;
+                    document.getElementById('welcomeMessageContainer').classList.add('hidden');
+                    messagesContainer.classList.remove('hidden');
+                    inputArea.className = 'p-6 chat-transition flex flex-col items-center justify-end';
+                    const inputContainer = inputArea.querySelector('.max-w-2xl');
+                    if (inputContainer) {
+                        inputContainer.classList.remove('max-w-2xl');
+                        inputContainer.classList.add('max-w-4xl');
+                    }
+                    
+                    // Add messages to UI
+                    chat.messages.forEach(msg => {
+                        addMessageToUI(msg.text, msg.sender, msg.files);
+                    });
+                }
+                
+                // Update chat history UI to show active chat
+                updateChatHistoryUI();
+            }
+            
+            function updateChatHistoryUI() {
+                const chatHistoryList = document.getElementById('chatHistoryList');
+                const noChatHistory = document.getElementById('noChatHistory');
+                
+                if (chatHistory.length === 0) {
+                    chatHistoryList.innerHTML = '';
+                    noChatHistory.classList.remove('hidden');
+                    return;
+                }
+                
+                noChatHistory.classList.add('hidden');
+                chatHistoryList.innerHTML = '';
+                
+                chatHistory.forEach(chat => {
+                    const chatItem = document.createElement('div');
+                    chatItem.className = `group p-2 hover:bg-gray-700 rounded-lg cursor-pointer transition-colors relative ${
+                        currentChatId === chat.id ? 'bg-gray-700 border-l-2 border-indigo-500' : ''
+                    }`;
+                    chatItem.dataset.chatId = chat.id;
+                    
+                    chatItem.innerHTML = `
+                        <div class="flex items-center justify-between">
+                            <div class="flex-1 min-w-0 chat-item-content">
+                                <div class="text-xs font-medium text-gray-200 truncate chat-title">${chat.title}</div>
+                                <div class="text-xs text-gray-400 mt-0.5">${formatChatDate(chat.updatedAt)}</div>
+                            </div>
+                            <div class="relative">
+                                <button class="chat-menu-btn ml-1 p-1 hover:bg-gray-600 rounded opacity-0 group-hover:opacity-100 transition-opacity" data-chat-id="${chat.id}">
+                                    <svg class="w-3 h-3 text-gray-400 hover:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"/>
+                                    </svg>
+                                </button>
+                                <!-- Chat Menu Dropdown -->
+                                <div class="chat-menu-dropdown hidden absolute right-0 top-8 rounded-lg shadow-lg border z-50 min-w-32" style="background-color: #1a1a1c; border-color: #444;">
+                                    <button class="rename-chat-btn w-full p-3 text-left hover:bg-gray-600 rounded-t-lg transition-colors flex items-center space-x-2 text-sm text-gray-300" data-chat-id="${chat.id}">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                                        </svg>
+                                        <span>Rename</span>
+                                    </button>
+                                    <button class="delete-chat-btn w-full p-3 text-left hover:bg-red-600 rounded-b-lg transition-colors flex items-center space-x-2 text-sm text-gray-300" data-chat-id="${chat.id}">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                                        </svg>
+                                        <span>Delete</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    
+                    chatHistoryList.appendChild(chatItem);
+                });
+                
+                // Remove any existing event listeners to prevent duplicates
+                const existingListener = chatHistoryList._chatEventListener;
+                if (existingListener) {
+                    chatHistoryList.removeEventListener('click', existingListener);
+                }
+                
+                // Create new event listener function
+                const chatEventListener = (e) => {
+                    e.stopPropagation();
+                    
+                    // Handle rename button clicks
+                    if (e.target.closest('.rename-chat-btn')) {
+                        const chatId = e.target.closest('.rename-chat-btn').dataset.chatId;
+                        const menuDropdown = e.target.closest('.chat-menu-dropdown');
+                        menuDropdown.classList.add('hidden');
+                        
+                        const chat = chatHistory.find(c => c.id === chatId);
+                        if (chat) {
+                            // Create custom rename dialog
+                            showRenameDialog(chat);
+                        }
+                        return;
+                    }
+                    
+                    // Handle delete button clicks
+                    if (e.target.closest('.delete-chat-btn')) {
+                        const chatId = e.target.closest('.delete-chat-btn').dataset.chatId;
+                        const menuDropdown = e.target.closest('.chat-menu-dropdown');
+                        menuDropdown.classList.add('hidden');
+                        
+                        const chat = chatHistory.find(c => c.id === chatId);
+                        if (chat) {
+                            showDeleteDialog(chat);
+                        }
+                        return;
+                    }
+                    
+                    // Handle menu button clicks
+                    if (e.target.closest('.chat-menu-btn')) {
+                        const menuDropdown = e.target.closest('.relative').querySelector('.chat-menu-dropdown');
+                        
+                        // Close all other dropdowns
+                        document.querySelectorAll('.chat-menu-dropdown').forEach(dropdown => {
+                            if (dropdown !== menuDropdown) {
+                                dropdown.classList.add('hidden');
+                            }
+                        });
+                        
+                        // Toggle current dropdown
+                        menuDropdown.classList.toggle('hidden');
+                        return;
+                    }
+                    
+                    // Handle chat item clicks (load chat)
+                    if (e.target.closest('.chat-item-content')) {
+                        const chatItem = e.target.closest('[data-chat-id]');
+                        const chatId = chatItem.dataset.chatId;
+                        if (chatId) {
+                            loadChat(chatId);
+                        }
+                        return;
+                    }
+                };
+                
+                // Store reference and add listener
+                chatHistoryList._chatEventListener = chatEventListener;
+                chatHistoryList.addEventListener('click', chatEventListener);
+            }
+            
+            function renameChat(chatId) {
+                const chat = chatHistory.find(c => c.id === chatId);
+                if (!chat) return;
+                
+                const newTitle = prompt('Enter new chat name:', chat.title);
+                if (newTitle && newTitle.trim() && newTitle.trim() !== chat.title) {
+                    chat.title = newTitle.trim();
+                    chat.updatedAt = new Date().toISOString();
+                    saveChatHistory();
+                    updateChatHistoryUI();
+                    showMessage('Chat renamed successfully!');
+                }
+            }
+            
+            function deleteChat(chatId) {
+                if (confirm('Delete this chat? This action cannot be undone.')) {
+                    chatHistory = chatHistory.filter(c => c.id !== chatId);
+                    saveChatHistory();
+                    
+                    if (currentChatId === chatId) {
+                        // If deleting current chat, start a new one
+                        startNewChat();
+                    } else {
+                        updateChatHistoryUI();
+                    }
+                }
+            }
+            
+            function formatChatDate(dateString) {
+                const date = new Date(dateString);
+                const now = new Date();
+                const diffMs = now - date;
+                const diffMins = Math.floor(diffMs / 60000);
+                const diffHours = Math.floor(diffMs / 3600000);
+                const diffDays = Math.floor(diffMs / 86400000);
+                
+                if (diffMins < 1) return 'Just now';
+                if (diffMins < 60) return `${diffMins}m ago`;
+                if (diffHours < 24) return `${diffHours}h ago`;
+                if (diffDays < 7) return `${diffDays}d ago`;
+                
+                return date.toLocaleDateString();
+            }
+            
+            function showRenameDialog(chat) {
+                // Create overlay
+                const overlay = document.createElement('div');
+                overlay.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
+                overlay.id = 'renameOverlay';
+                
+                // Create dialog
+                const dialog = document.createElement('div');
+                dialog.className = 'rounded-xl border p-6 max-w-md w-full mx-4 shadow-2xl';
+                dialog.style.backgroundColor = '#2a2a2c';
+                dialog.style.borderColor = '#444';
+                
+                dialog.innerHTML = `
+                    <div class="mb-4">
+                        <h3 class="text-lg font-semibold text-white mb-2">Rename Chat</h3>
+                        <p class="text-sm text-gray-400">Enter a new name for this chat</p>
+                    </div>
+                    
+                    <div class="mb-6">
+                        <input 
+                            type="text" 
+                            id="renameInput" 
+                            value="${chat.title}"
+                            class="w-full px-4 py-3 border rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                            style="background-color: #1a1a1c; border-color: #444;"
+                            placeholder="Chat name"
+                            maxlength="50"
+                        >
+                    </div>
+                    
+                    <div class="flex space-x-3">
+                        <button 
+                            id="cancelRename" 
+                            class="flex-1 px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors"
+                        >
+                            Cancel
+                        </button>
+                        <button 
+                            id="confirmRename" 
+                            class="flex-1 px-4 py-2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-lg hover:from-indigo-700 hover:to-purple-700 transition-all duration-200"
+                        >
+                            Rename
+                        </button>
+                    </div>
+                `;
+                
+                overlay.appendChild(dialog);
+                document.body.appendChild(overlay);
+                
+                // Focus input and select text
+                const input = document.getElementById('renameInput');
+                input.focus();
+                input.select();
+                
+                // Event listeners
+                document.getElementById('cancelRename').addEventListener('click', () => {
+                    overlay.remove();
+                });
+                
+                document.getElementById('confirmRename').addEventListener('click', () => {
+                    const newTitle = input.value.trim();
+                    if (newTitle && newTitle !== chat.title) {
+                        chat.title = newTitle;
+                        chat.updatedAt = new Date().toISOString();
+                        saveChatHistory();
+                        updateChatHistoryUI();
+                        showMessage('Chat renamed successfully!');
+                    }
+                    overlay.remove();
+                });
+                
+                // Handle Enter key
+                input.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') {
+                        document.getElementById('confirmRename').click();
+                    }
+                });
+                
+                // Handle Escape key
+                document.addEventListener('keydown', function escapeHandler(e) {
+                    if (e.key === 'Escape') {
+                        overlay.remove();
+                        document.removeEventListener('keydown', escapeHandler);
+                    }
+                });
+                
+                // Close on overlay click
+                overlay.addEventListener('click', (e) => {
+                    if (e.target === overlay) {
+                        overlay.remove();
+                    }
+                });
+            }
+            
+            function showDeleteDialog(chat) {
+                // Create overlay
+                const overlay = document.createElement('div');
+                overlay.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
+                overlay.id = 'deleteOverlay';
+                
+                // Create dialog
+                const dialog = document.createElement('div');
+                dialog.className = 'rounded-xl border p-6 max-w-md w-full mx-4 shadow-2xl';
+                dialog.style.backgroundColor = '#2a2a2c';
+                dialog.style.borderColor = '#444';
+                
+                dialog.innerHTML = `
+                    <div class="mb-6">
+                        <div class="flex items-center space-x-3 mb-4">
+                            <div class="w-12 h-12 bg-red-600 rounded-full flex items-center justify-center">
+                                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-semibold text-white">Delete Chat</h3>
+                                <p class="text-sm text-gray-400">This action cannot be undone</p>
+                            </div>
+                        </div>
+                        
+                        <div class="rounded-lg p-4 mb-4" style="background-color: #1a1a1c;">
+                            <p class="text-sm text-gray-300 mb-2">You're about to delete:</p>
+                            <p class="text-white font-medium">"${chat.title}"</p>
+                            <p class="text-xs text-gray-400 mt-1">${chat.messages.length} message${chat.messages.length !== 1 ? 's' : ''} • ${formatChatDate(chat.updatedAt)}</p>
+                        </div>
+                        
+                        <p class="text-sm text-gray-400">
+                            All messages and files in this chat will be permanently deleted. This action cannot be undone.
+                        </p>
+                    </div>
+                    
+                    <div class="flex space-x-3">
+                        <button 
+                            id="cancelDelete" 
+                            class="flex-1 px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors"
+                        >
+                            Cancel
+                        </button>
+                        <button 
+                            id="confirmDelete" 
+                            class="flex-1 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors font-medium"
+                        >
+                            Delete Chat
+                        </button>
+                    </div>
+                `;
+                
+                overlay.appendChild(dialog);
+                document.body.appendChild(overlay);
+                
+                // Event listeners
+                document.getElementById('cancelDelete').addEventListener('click', () => {
+                    overlay.remove();
+                });
+                
+                document.getElementById('confirmDelete').addEventListener('click', () => {
+                    // Delete the chat
+                    const chatIndex = chatHistory.findIndex(c => c.id === chat.id);
+                    if (chatIndex !== -1) {
+                        chatHistory.splice(chatIndex, 1);
+                        saveChatHistory();
+                        
+                        // If deleting current chat, handle appropriately
+                        if (currentChatId === chat.id) {
+                            if (chatHistory.length > 0) {
+                                // Load the most recent remaining chat
+                                loadChat(chatHistory[0].id);
+                            } else {
+                                // No chats left, start a new one
+                                startNewChat();
+                            }
+                        } else {
+                            // Just update the UI
+                            updateChatHistoryUI();
+                        }
+                        
+                        showMessage('Chat deleted successfully!');
+                    }
+                    overlay.remove();
+                });
+                
+                // Handle Escape key
+                document.addEventListener('keydown', function escapeHandler(e) {
+                    if (e.key === 'Escape') {
+                        overlay.remove();
+                        document.removeEventListener('keydown', escapeHandler);
+                    }
+                });
+                
+                // Close on overlay click
+                overlay.addEventListener('click', (e) => {
+                    if (e.target === overlay) {
+                        overlay.remove();
+                    }
+                });
+            }
+            
+            function startNewChat() {
+                // Check if current chat is empty (no messages)
+                if (currentChatId) {
+                    const currentChat = chatHistory.find(c => c.id === currentChatId);
+                    if (currentChat && currentChat.messages.length === 0) {
+                        // Already in an empty chat, don't create a new one
+                        return;
+                    }
+                }
+                
+                createNewChat();
+                
+                // Reset UI to welcome state
+                hasMessages = false;
+                messagesList.innerHTML = '';
+                messagesContainer.classList.add('hidden');
+                document.getElementById('welcomeMessageContainer').classList.remove('hidden');
+                
+                // Reset input to center
+                inputArea.className = 'absolute inset-0 flex flex-col items-center justify-center p-6 chat-transition';
+                const inputContainer = inputArea.querySelector('div');
+                inputContainer.classList.remove('max-w-4xl');
+                inputContainer.classList.add('max-w-2xl');
+                
+                // Clear attached files
+                attachedFiles = [];
+                updateFilePreview();
+            }
+
+            // Auto-resize textarea
+            function autoResizeTextarea() {
+                messageInput.style.height = 'auto';
+                messageInput.style.height = Math.min(messageInput.scrollHeight, 200) + 'px';
+            }
+            
+            // Send message function
+            function sendMessage() {
+                const message = messageInput.value.trim();
+                
+                if (!message && attachedFiles.length === 0) return;
+                
+                // Create new chat if none exists
+                if (!currentChatId) {
+                    createNewChat();
+                }
+                
+                // First message - transition to chat mode
+                if (!hasMessages) {
+                    hasMessages = true;
+                    document.getElementById('welcomeMessageContainer').classList.add('hidden');
+                    messagesContainer.classList.remove('hidden');
+                
+                    // Fix Container Layout    
+                    chatContainer.className = 'flex-1 flex flex-col overflow-hidden';
+                    messagesContainer.style.flex = '1';
+                    messagesContainer.style.overflowY = 'auto';
+
+                    // Move input to bottom and expand width
+                    inputArea.className = 'p-6 border-t chat-transition flex flex-col items-center justify-end';
+                    inputArea.style.borderColor = '#333';
+                    inputArea.style.flexShrink = '0';
+                    const inputContainer = inputArea.querySelector('.max-w-2xl');
+                    if (inputContainer) {
+                        inputContainer.classList.remove('max-w-2xl');
+                        inputContainer.classList.add('max-w-4xl');
+                    }
+                }
+                
+                // Store files before clearing
+                const currentFiles = attachedFiles.length > 0 ? [...attachedFiles] : null;
+                
+                // Add user message with files
+                addMessage(message, 'user', currentFiles);
+                messageInput.value = '';
+                
+                // Reset textarea height
+                autoResizeTextarea();
+                
+                // Clear attached files after sending
+                attachedFiles = [];
+                updateFilePreview();
+                
+                // Update chat title if this is the first message
+                if (message) {
+                    updateChatTitle(currentChatId, message);
+                }
+                
+                // Simulate bot response
+                // Add typing indicator
+const typingDiv = document.createElement('div');
+typingDiv.id = 'typingIndicator';
+typingDiv.className = 'flex justify-start message-fade-in';
+typingDiv.innerHTML = `
+    <div class="px-4 py-3 rounded-2xl text-gray-200 shadow-md border" style="background-color: #2a2a2c; border-color: #444;">
+        <div class="flex space-x-1">
+            <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
+            <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 0.1s"></div>
+            <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 0.2s"></div>
+        </div>
+    </div>
+`;
+messagesList.appendChild(typingDiv);
+messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+// Get AI response from backend
+(async function() {
+    try {
+        const response = await fetch('http://localhost:3000/api/chat', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                message: message,
+                deepThinking: aiSettings.deepThinking,
+                studyLearn: aiSettings.studyLearn
+            })      
+        });
+        
+        // Remove typing indicator
+        const indicator = document.getElementById('typingIndicator');
+        if (indicator) indicator.remove();
+        
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        
+        const data = await response.json();
+        addMessage(data.response, 'bot');
+        
+    } catch (error) {
+        console.error('Error:', error);
+        
+        // Remove typing indicator
+        const indicator = document.getElementById('typingIndicator');
+        if (indicator) indicator.remove();
+        
+        addMessage("I'm sorry, I'm having trouble connecting right now. Please make sure the server is running and try again.", 'bot');
+    }
+})();
+            }
+            
+            // Add message to UI only
+            function addMessageToUI(text, sender, files = null) {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = `flex ${sender === 'user' ? 'justify-end' : 'justify-start'} message-fade-in`;
+                
+                const bubbleContainer = document.createElement('div');
+                bubbleContainer.className = 'chat-bubble';
+                
+                // Add files if present
+                if (files && files.length > 0) {
+                    const filesDiv = document.createElement('div');
+                    filesDiv.className = `mb-2 space-y-1 rounded-lg p-2`;
+                    filesDiv.style.backgroundColor = sender === 'user' ? '#4338ca' : '#1a1a1c';
+                    
+                    files.forEach(file => {
+                        const fileItem = document.createElement('div');
+                        fileItem.className = 'flex items-center space-x-2 text-xs';
+                        
+                        const fileIcon = getFileIcon(file.type);
+                        fileIcon.className = 'w-4 h-4 rounded flex items-center justify-center text-white text-xs';
+                        
+                        const fileName = document.createElement('span');
+                        fileName.className = sender === 'user' ? 'text-indigo-100' : 'text-gray-300';
+                        fileName.textContent = file.name;
+                        
+                        const fileSize = document.createElement('span');
+                        fileSize.className = sender === 'user' ? 'text-indigo-200' : 'text-gray-400';
+                        fileSize.textContent = formatFileSize(file.size);
+                        
+                        fileItem.appendChild(fileIcon);
+                        fileItem.appendChild(fileName);
+                        fileItem.appendChild(fileSize);
+                        filesDiv.appendChild(fileItem);
+                    });
+                    
+                    bubbleContainer.appendChild(filesDiv);
+                }
+                
+                // Add text message if present
+                if (text) {
+                    const textDiv = document.createElement('div');
+                    textDiv.className = `px-4 py-3 rounded-2xl ${
+                        sender === 'user' 
+                            ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white' 
+                            : 'text-gray-200 shadow-md border'
+                    }`;
+                    if (sender === 'bot') {
+                        textDiv.style.backgroundColor = '#2a2a2c';
+                        textDiv.style.borderColor = '#444';
+                    }
+                    textDiv.textContent = text;
+                    bubbleContainer.appendChild(textDiv);
+                } else if (files && files.length > 0) {
+                    // Style the files container as a message bubble if no text
+                    filesDiv.className = `space-y-1 px-4 py-3 rounded-2xl ${
+                        sender === 'user' 
+                            ? 'bg-gradient-to-r from-indigo-600 to-purple-600' 
+                            : 'shadow-md border'
+                    }`;
+                    if (sender === 'bot') {
+                        filesDiv.style.backgroundColor = '#2a2a2c';
+                        filesDiv.style.borderColor = '#444';
+                    }
+                }
+                
+                messageDiv.appendChild(bubbleContainer);
+                messagesList.appendChild(messageDiv);
+                
+                // Scroll to bottom
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            }
+            
+            // Add message to chat (saves to history and updates UI)
+            function addMessage(text, sender, files = null) {
+                // Save to current chat history
+                if (currentChatId) {
+                    const chat = chatHistory.find(c => c.id === currentChatId);
+                    if (chat) {
+                        const messageData = {
+                            text: text,
+                            sender: sender,
+                            files: files,
+                            timestamp: new Date().toISOString()
+                        };
+                        
+                        chat.messages.push(messageData);
+                        chat.updatedAt = new Date().toISOString();
+                        saveChatHistory();
+                        updateChatHistoryUI();
+                    }
+                }
+                
+                // Add to UI
+                addMessageToUI(text, sender, files);
+            }
+            
+            // Event listeners
+            sendBtn.addEventListener('click', sendMessage);
+            messageInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    sendMessage();
+                }
+            });
+            
+            // Auto-resize textarea on input
+            messageInput.addEventListener('input', autoResizeTextarea);
+            
+            // New chat button
+            newChatBtn.addEventListener('click', () => {
+                startNewChat();
+            });
+            
+            // Settings page functionality
+            function showSettingsPage() {
+                // Hide chat interface
+                document.getElementById('chatContainer').style.display = 'none';
+                document.getElementById('inputArea').style.display = 'none';
+                
+                // Create settings page
+                const settingsPage = document.createElement('div');
+                settingsPage.id = 'settingsPage';
+                settingsPage.className = 'flex-1 overflow-y-auto';
+                settingsPage.style.backgroundColor = '#1f1f21';
+                settingsPage.innerHTML = `
+                    <div class="max-w-4xl mx-auto p-6">
+                        <!-- Settings Header -->
+                        <div class="flex items-center justify-between mb-8">
+                            <div class="flex items-center space-x-4">
+                                <button id="backToChat" class="p-2 hover:bg-gray-800 rounded-lg transition-colors">
+                                    <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                                    </svg>
+                                </button>
+                                <h1 class="text-3xl font-bold text-white">Settings</h1>
+                            </div>
+                        </div>
+                        
+                        <!-- Settings Sections -->
+                        <div class="space-y-8">
+                            <!-- Profile Section -->
+                            <div class="rounded-xl border p-6" style="background-color: #2a2a2c; border-color: #444;">
+                                <h2 class="text-xl font-semibold text-white mb-6 flex items-center space-x-2">
+                                    <svg class="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                                    </svg>
+                                    <span>Profile</span>
+                                </h2>
+                                
+                                <div class="space-y-6">
+                                    <!-- Name -->
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-300 mb-2">Name</label>
+                                        <input 
+                                            type="text" 
+                                            id="profileName" 
+                                            class="w-full px-4 py-3 border rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                                            style="background-color: #1a1a1c; border-color: #444;"
+                                            placeholder="Enter your name"
+                                        >
+                                    </div>
+                                    
+                                    <!-- Work Function -->
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-300 mb-2">Work Function</label>
+                                        <select 
+                                            id="workFunction" 
+                                            class="w-full px-4 py-3 border rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                                            style="background-color: #1a1a1c; border-color: #444;"
+                                        >
+                                            <option value="">Select your work function</option>
+                                            <option value="product-management">Product Management</option>
+                                            <option value="education">Education</option>
+                                            <option value="software-development">Software Development</option>
+                                            <option value="data-science">Data Science</option>
+                                            <option value="marketing">Marketing</option>
+                                            <option value="sales">Sales</option>
+                                            <option value="design">Design</option>
+                                            <option value="finance">Finance</option>
+                                            <option value="hr">Human Resources</option>
+                                            <option value="operations">Operations</option>
+                                            <option value="consulting">Consulting</option>
+                                            <option value="research">Research</option>
+                                            <option value="healthcare">Healthcare</option>
+                                            <option value="legal">Legal</option>
+                                            <option value="customer-support">Customer Support</option>
+                                            <option value="other">Other</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <!-- Theme -->
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-300 mb-2">Theme</label>
+                                        <div class="grid grid-cols-3 gap-3">
+                                            <button id="darkTheme" class="theme-option p-4 border-2 rounded-xl hover:border-indigo-500 transition-colors" style="background-color: #1a1a1c; border-color: #444;">
+                                                <div class="flex flex-col items-center space-y-2">
+                                                    <div class="w-8 h-8 rounded-lg border" style="background-color: #050505; border-color: #333;"></div>
+                                                    <span class="text-sm text-gray-300">Dark</span>
+                                                </div>
+                                            </button>
+                                            <button id="lightTheme" class="theme-option p-4 border-2 rounded-xl hover:border-indigo-500 transition-colors" style="background-color: #1a1a1c; border-color: #444;">
+                                                <div class="flex flex-col items-center space-y-2">
+                                                    <div class="w-8 h-8 bg-white rounded-lg border border-gray-300"></div>
+                                                    <span class="text-sm text-gray-300">Light</span>
+                                                </div>
+                                            </button>
+                                            <button id="systemTheme" class="theme-option p-4 border-2 rounded-xl hover:border-indigo-500 transition-colors" style="background-color: #1a1a1c; border-color: #444;">
+                                                <div class="flex flex-col items-center space-y-2">
+                                                    <div class="w-8 h-8 bg-gradient-to-br rounded-lg" style="background: linear-gradient(to bottom right, #050505, white);"></div>
+                                                    <span class="text-sm text-gray-300">System</span>
+                                                </div>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    
+                                    <button id="saveProfile" class="bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-3 px-6 rounded-xl font-medium hover:from-indigo-700 hover:to-purple-700 transition-all duration-200">
+                                        Save Changes
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <!-- Language Section -->
+                            <div class="rounded-xl border p-6" style="background-color: #2a2a2c; border-color: #444;">
+                                <h2 class="text-xl font-semibold text-white mb-6 flex items-center space-x-2">
+                                    <svg class="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129"/>
+                                    </svg>
+                                    <span>Language</span>
+                                </h2>
+                                
+                                <div class="space-y-6">
+                                    <!-- Interface Language -->
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-300 mb-2">Interface Language</label>
+                                        <select 
+                                            id="interfaceLanguage" 
+                                            class="w-full px-4 py-3 border rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                                            style="background-color: #1a1a1c; border-color: #444;"
+                                        >
+                                            <option value="en">English</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <!-- AI Response Language -->
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-300 mb-2">AI Response Language</label>
+                                        <select 
+                                            id="responseLanguage" 
+                                            class="w-full px-4 py-3 border rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                                            style="background-color: #1a1a1c; border-color: #444;"
+                                        >
+                                            <option value="en">English</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <button id="saveLanguage" class="bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-3 px-6 rounded-xl font-medium hover:from-indigo-700 hover:to-purple-700 transition-all duration-200">
+                                        Save Language Settings
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <!-- Account Section -->
+                            <div class="rounded-xl border p-6" style="background-color: #2a2a2c; border-color: #444;">
+                                <h2 class="text-xl font-semibold text-white mb-6 flex items-center space-x-2">
+                                    <svg class="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                    </svg>
+                                    <span>Account</span>
+                                </h2>
+                                
+                                <div class="space-y-6">
+                                    <!-- Email Display -->
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-300 mb-2">Email</label>
+                                        <div class="w-full px-4 py-3 border rounded-xl text-gray-400" id="accountEmail" style="background-color: #1a1a1c; border-color: #444;">
+                                            <!-- Email will be populated here -->
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Account Actions -->
+                                    <div class="flex flex-col sm:flex-row gap-4">
+                                        <button id="logoutAccount" class="flex-1 bg-gray-600 text-white py-3 px-6 rounded-xl font-medium hover:bg-gray-700 transition-colors flex items-center justify-center space-x-2">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+                                            </svg>
+                                            <span>Log Out</span>
+                                        </button>
+                                        <button id="deleteAccount" class="flex-1 bg-red-600 text-white py-3 px-6 rounded-xl font-medium hover:bg-red-700 transition-colors flex items-center justify-center space-x-2">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                                            </svg>
+                                            <span>Delete Account</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Models Section -->
+                            <div class="rounded-xl border p-6" style="background-color: #2a2a2c; border-color: #444;">
+                                <h2 class="text-xl font-semibold text-white mb-6 flex items-center space-x-2">
+                                    <svg class="w-5 h-5 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
+                                    </svg>
+                                    <span>AI Models</span>
+                                </h2>
+                                
+                                <div class="space-y-4">
+                                    <!-- Propeller V1 -->
+                                    <div class="model-option border-2 rounded-xl p-4 hover:border-indigo-500 transition-colors cursor-pointer" data-model="v1" style="border-color: #444;">
+                                        <div class="flex items-center justify-between">
+                                            <div class="flex items-center space-x-4">
+                                                <div class="w-12 h-12 bg-gradient-to-r from-indigo-500 to-indigo-600 rounded-xl flex items-center justify-center">
+                                                    <span class="text-white font-bold text-sm">V1</span>
+                                                </div>
+                                                <div>
+                                                    <h3 class="text-lg font-semibold text-white">Propeller V1</h3>
+                                                    <p class="text-sm text-gray-400">Fast and efficient for everyday tasks</p>
+                                                    <div class="flex items-center space-x-4 mt-2">
+                                                        <span class="text-xs bg-indigo-600 text-white px-2 py-1 rounded">Fast</span>
+                                                        <span class="text-xs bg-green-600 text-white px-2 py-1 rounded">Reliable</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="flex items-center space-x-3">
+                                                <span class="primary-badge hidden text-xs bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-3 py-1 rounded-full font-medium">Primary</span>
+                                                <button class="set-primary-btn bg-gray-600 text-white py-2 px-4 rounded-lg font-medium hover:bg-gray-700 transition-colors text-sm">
+                                                    Set as Primary
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Propeller V2 -->
+                                    <div class="model-option border-2 border-indigo-500 rounded-xl p-4 hover:border-indigo-500 transition-colors cursor-pointer" data-model="v2">
+                                        <div class="flex items-center justify-between">
+                                            <div class="flex items-center space-x-4">
+                                                <div class="w-12 h-12 bg-gradient-to-r from-purple-500 to-purple-600 rounded-xl flex items-center justify-center">
+                                                    <span class="text-white font-bold text-sm">V2</span>
+                                                </div>
+                                                <div>
+                                                    <h3 class="text-lg font-semibold text-white">Propeller V2</h3>
+                                                    <p class="text-sm text-gray-400">Advanced reasoning and complex problem solving</p>
+                                                    <div class="flex items-center space-x-4 mt-2">
+                                                        <span class="text-xs bg-purple-600 text-white px-2 py-1 rounded">Advanced</span>
+                                                        <span class="text-xs bg-orange-600 text-white px-2 py-1 rounded">Powerful</span>
+                                                        <span class="text-xs bg-yellow-600 text-white px-2 py-1 rounded">Latest</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="flex items-center space-x-3">
+                                                <span class="primary-badge text-xs bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-3 py-1 rounded-full font-medium">Primary</span>
+                                                <button class="set-primary-btn hidden bg-gray-600 text-white py-2 px-4 rounded-lg font-medium hover:bg-gray-700 transition-colors text-sm">
+                                                    Set as Primary
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                // Insert settings page
+                document.querySelector('.flex-1.flex.flex-col.relative').appendChild(settingsPage);
+                
+                // Initialize settings page
+                initializeSettingsPage();
+            }
+            
+            function initializeSettingsPage() {
+                const currentUser = JSON.parse(localStorage.getItem('propellerCurrentUser'));
+                const userSettings = JSON.parse(localStorage.getItem('propellerUserSettings') || '{}');
+                
+                // Populate current values
+                document.getElementById('profileName').value = currentUser?.name || '';
+                document.getElementById('accountEmail').textContent = currentUser?.email || '';
+                document.getElementById('workFunction').value = userSettings.workFunction || '';
+                document.getElementById('interfaceLanguage').value = userSettings.interfaceLanguage || 'en';
+                document.getElementById('responseLanguage').value = userSettings.responseLanguage || 'auto';
+                document.getElementById('timeZone').value = userSettings.timeZone || 'auto';
+                
+                // Set current theme
+                const currentTheme = userSettings.theme || 'dark';
+                document.querySelectorAll('.theme-option').forEach(btn => {
+                    btn.style.borderColor = '#444';
+                });
+                document.getElementById(currentTheme + 'Theme').style.borderColor = '#6366f1';
+                
+                // Set current model
+                const currentModel = userSettings.primaryModel || 'v2';
+                document.querySelectorAll('.model-option').forEach(option => {
+                    const model = option.dataset.model;
+                    const primaryBadge = option.querySelector('.primary-badge');
+                    const setPrimaryBtn = option.querySelector('.set-primary-btn');
+                    
+                    if (model === currentModel) {
+                        option.style.borderColor = '#6366f1';
+                        primaryBadge.classList.remove('hidden');
+                        setPrimaryBtn.classList.add('hidden');
+                    } else {
+                        option.style.borderColor = '#444';
+                        primaryBadge.classList.add('hidden');
+                        setPrimaryBtn.classList.remove('hidden');
+                    }
+                });
+                
+                // Event listeners
+                document.getElementById('backToChat').addEventListener('click', () => {
+                    document.getElementById('settingsPage').remove();
+                    document.getElementById('chatContainer').style.display = 'flex';
+                    document.getElementById('inputArea').style.display = 'flex';
+                });
+                
+                // Theme selection
+                document.querySelectorAll('.theme-option').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        document.querySelectorAll('.theme-option').forEach(b => {
+                            b.style.borderColor = '#444';
+                        });
+                        btn.style.borderColor = '#6366f1';
+                    });
+                });
+                
+                // Model selection
+                document.querySelectorAll('.set-primary-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        const modelOption = btn.closest('.model-option');
+                        const model = modelOption.dataset.model;
+                        
+                        // Update UI
+                        document.querySelectorAll('.model-option').forEach(option => {
+                            const primaryBadge = option.querySelector('.primary-badge');
+                            const setPrimaryBtn = option.querySelector('.set-primary-btn');
+                            
+                            option.style.borderColor = '#444';
+                            primaryBadge.classList.add('hidden');
+                            setPrimaryBtn.classList.remove('hidden');
+                        });
+                        
+                        modelOption.style.borderColor = '#6366f1';
+                        modelOption.querySelector('.primary-badge').classList.remove('hidden');
+                        btn.classList.add('hidden');
+                        
+                        // Save to localStorage
+                        const settings = JSON.parse(localStorage.getItem('propellerUserSettings') || '{}');
+                        settings.primaryModel = model;
+                        localStorage.setItem('propellerUserSettings', JSON.stringify(settings));
+                        
+                        showMessage(`Propeller ${model.toUpperCase()} set as primary model!`);
+                    });
+                });
+                
+                // Save profile
+                document.getElementById('saveProfile').addEventListener('click', () => {
+                    const name = document.getElementById('profileName').value.trim();
+                    const workFunction = document.getElementById('workFunction').value;
+                    const selectedTheme = document.querySelector('.theme-option[style*="border-color: rgb(99, 102, 241)"]').id.replace('Theme', '');
+                    
+                    if (!name) {
+                        showMessage('Please enter your name!', true);
+                        return;
+                    }
+                    
+                    // Update user info
+                    const currentUser = JSON.parse(localStorage.getItem('propellerCurrentUser'));
+                    currentUser.name = name;
+                    localStorage.setItem('propellerCurrentUser', JSON.stringify(currentUser));
+                    
+                    // Update users array
+                    const users = JSON.parse(localStorage.getItem('propellerUsers') || '[]');
+                    const userIndex = users.findIndex(u => u.id === currentUser.id);
+                    if (userIndex !== -1) {
+                        users[userIndex].name = name;
+                        localStorage.setItem('propellerUsers', JSON.stringify(users));
+                    }
+                    
+                    // Save settings
+                    const settings = JSON.parse(localStorage.getItem('propellerUserSettings') || '{}');
+                    settings.workFunction = workFunction;
+                    settings.theme = selectedTheme;
+                    localStorage.setItem('propellerUserSettings', JSON.stringify(settings));
+                    
+                    // Update UI
+                    document.getElementById('userName').textContent = name;
+                    document.getElementById('userInitial').textContent = name.charAt(0).toUpperCase();
+                    
+                    showMessage('Profile updated successfully!');
+                });
+                
+                // Save language settings
+                document.getElementById('saveLanguage').addEventListener('click', () => {
+                    const interfaceLanguage = document.getElementById('interfaceLanguage').value;
+                    const responseLanguage = document.getElementById('responseLanguage').value;
+                    const timeZone = document.getElementById('timeZone').value;
+                    
+                    // Save language settings
+                    const settings = JSON.parse(localStorage.getItem('propellerUserSettings') || '{}');
+                    settings.interfaceLanguage = interfaceLanguage;
+                    settings.responseLanguage = responseLanguage;
+                    settings.timeZone = timeZone;
+                    localStorage.setItem('propellerUserSettings', JSON.stringify(settings));
+                    
+                    showMessage('Language settings saved successfully!');
+                });
+                
+                // Account actions
+                document.getElementById('logoutAccount').addEventListener('click', () => {
+                    localStorage.removeItem('propellerCurrentUser');
+                    location.reload();
+                });
+                
+                document.getElementById('deleteAccount').addEventListener('click', () => {
+                    if (confirm('Are you sure you want to delete your account? This action cannot be undone.')) {
+                        const currentUser = JSON.parse(localStorage.getItem('propellerCurrentUser'));
+                        const users = JSON.parse(localStorage.getItem('propellerUsers') || '[]');
+                        const updatedUsers = users.filter(u => u.id !== currentUser.id);
+                        
+                        localStorage.setItem('propellerUsers', JSON.stringify(updatedUsers));
+                        localStorage.removeItem('propellerCurrentUser');
+                        localStorage.removeItem('propellerUserSettings');
+                        
+                        showMessage('Account deleted successfully!');
+                        setTimeout(() => location.reload(), 2000);
+                    }
+                });
+            }
+            
+            // Initialize chat history and focus input on load
+            updateChatHistoryUI();
+            
+            // Start with a new chat if no history exists
+            if (chatHistory.length === 0) {
+                createNewChat();
+            } else {
+                // Load the most recent chat
+                currentChatId = chatHistory[0].id;
+                updateChatHistoryUI();
+            }
+            
+            messageInput.focus();
+        }
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9881e0e0757ba7ce',t:'MTc1OTM4Mzc2Ny4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
