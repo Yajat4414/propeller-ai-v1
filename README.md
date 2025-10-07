@@ -41,9 +41,9 @@ The settings interface allows users to switch between light and dark themes, man
 
 ## Installation
 
-1. Clone the repository:
 ```bash
 mkdir 'propellerai'
 cd 'propellerai'
 git clone https://github.com/yourusername/propeller-ai-v1.git
 node server.js
+
